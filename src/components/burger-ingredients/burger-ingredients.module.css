@@ -6,6 +6,11 @@
   margin: 0;
 }
 
+.scrollContainer {
+  height: 690px;
+  overflow-y: auto;
+}
+
 .list {
   margin: 0;
   padding: 0;

@@ -21,38 +21,40 @@ const BurgerIngredients = () => {
           Начинки
         </Tab>
       </div>
-      <ul className={styles.list}>
-        <li className='mb-10'>
-          <h2 className='text text_type_main-medium'>Булки</h2>
-          <ul className={`${styles.list} ${styles.innerList}`}>
-            {data.filter(item => item.type === 'bun').map(item => (
-              <li key={item.name}>
-                <BurgerIngredientsItem name={item.name} price={item.price} image={item.image} />
-              </li>
-            ))}
-          </ul>
-        </li>
-        <li className='mb-10'>
-          <h2 className='text text_type_main-medium'>Соусы</h2>
-          <ul className={`${styles.list} ${styles.innerList}`}>
-            {data.filter(item => item.type === 'sauce').map(item => (
-              <li key={item.name}>
-                <BurgerIngredientsItem name={item.name} price={item.price} image={item.image} />
-              </li>
-            ))}
-          </ul>
-        </li>
-        <li>
-          <h2 className='text text_type_main-medium'>Начинки</h2>
-          <ul className={`${styles.list} ${styles.innerList}`}>
-            {data.filter(item => item.type === 'main').map(item => (
-              <li key={item.name}>
-                <BurgerIngredientsItem name={item.name} price={item.price} image={item.image} />
-              </li>
-            ))}
-          </ul>
-        </li>
-      </ul>
+      <div className={styles.scrollContainer}>
+        <ul className={styles.list}>
+          <li className='mb-10'>
+            <h2 className='text text_type_main-medium'>Булки</h2>
+            <ul className={`${styles.list} ${styles.innerList}`}>
+              {data.filter(item => item.type === 'bun').map(item => (
+                <li key={item.name}>
+                  <BurgerIngredientsItem name={item.name} price={item.price} image={item.image} />
+                </li>
+              ))}
+            </ul>
+          </li>
+          <li className='mb-10'>
+            <h2 className='text text_type_main-medium'>Соусы</h2>
+            <ul className={`${styles.list} ${styles.innerList}`}>
+              {data.filter(item => item.type === 'sauce').map(item => (
+                <li key={item.name}>
+                  <BurgerIngredientsItem name={item.name} price={item.price} image={item.image} />
+                </li>
+              ))}
+            </ul>
+          </li>
+          <li>
+            <h2 className='text text_type_main-medium'>Начинки</h2>
+            <ul className={`${styles.list} ${styles.innerList}`}>
+              {data.filter(item => item.type === 'main').map(item => (
+                <li key={item.name}>
+                  <BurgerIngredientsItem name={item.name} price={item.price} image={item.image} />
+                </li>
+              ))}
+            </ul>
+          </li>
+        </ul>
+      </div>
     </section>
   );
 };
