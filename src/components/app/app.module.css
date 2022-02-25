@@ -1,3 +1,11 @@
 .app {
+  max-height: 100vh;
+  overflow: hidden;
   background-color: #131316;
+}
+
+.main {
+  margin: 0 auto;
+  max-width: 1320px;
+  box-sizing: border-box;
 }

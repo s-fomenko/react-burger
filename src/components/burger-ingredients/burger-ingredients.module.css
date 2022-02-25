@@ -1,0 +1,20 @@
+.container {
+  max-width: 600px;
+}
+
+.title {
+  margin: 0;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.innerList {
+  display: grid;
+  grid-template-columns: max-content max-content;
+  column-gap: 24px;
+  padding: 0 16px;
+}
