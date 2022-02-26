@@ -12,7 +12,7 @@ const BurgerConstructor = ({ data }: Props) => {
 
   return (
     <section className={`${styles.container} pt-25`}>
-      <div className='pl-8'>
+      <div className={styles.blockedElement}>
         <ConstructorElement
           type='top'
           isLocked={true}
@@ -35,7 +35,7 @@ const BurgerConstructor = ({ data }: Props) => {
           ))}
         </ul>
       </div>
-      <div className='pl-8'>
+      <div className={styles.blockedElement}>
         <ConstructorElement
           type='bottom'
           isLocked={true}
