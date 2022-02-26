@@ -1,10 +1,14 @@
 import React, {useState} from 'react';
-import { Tab } from '@ya.praktikum/react-developer-burger-ui-components'
-import {data} from "../../utils/data";
-import styles from './burger-ingredients.module.css';
+import {Tab} from '@ya.praktikum/react-developer-burger-ui-components'
 import BurgerIngredientsItem from "../burger-ingredients-item/burger-ingredients-item";
+import {Data} from "../../utils/data";
+import styles from './burger-ingredients.module.css';
 
-const BurgerIngredients = () => {
+type Props = {
+  data: Data[];
+}
+
+const BurgerIngredients = ({ data }: Props) => {
   const [current, setCurrent] = useState('bun');
 
   return (

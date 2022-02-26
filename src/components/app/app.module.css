@@ -1,8 +1,13 @@
 .app {
+  height: 100vh;
+  overflow: hidden;
   background-color: #131316;
 }
 
 .main {
+  display: grid;
+  grid-template-columns: max-content max-content;
+  column-gap: 40px;
   margin: 0 auto;
   max-width: 1320px;
   box-sizing: border-box;
