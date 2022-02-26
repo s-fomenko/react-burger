@@ -25,3 +25,22 @@
   align-items: center;
   gap: 8px;
 }
+
+.orderWrapper {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 40px;
+}
+
+.total {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+}
+
+.total svg {
+  width: 36px;
+  height: 36px;
+}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ConstructorElement, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components'
+import { ConstructorElement, DragIcon, Button, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components'
 import {Data} from "../../utils/data";
 import styles from "./burger-constructor.module.css";
 
@@ -43,6 +43,15 @@ const BurgerConstructor = ({ data }: Props) => {
           thumbnail={lockedElement.image}
           price={lockedElement.price}
         />
+      </div>
+      <div className={`${styles.orderWrapper} mt-10`}>
+        <div className={styles.total}>
+          <span className='text text_type_digits-medium'>610</span>
+          <CurrencyIcon type="primary" />
+        </div>
+        <Button type="primary" size="large">
+          Оформить заказ
+        </Button>
       </div>
     </section>
   );
