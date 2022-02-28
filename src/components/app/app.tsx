@@ -8,6 +8,23 @@ import styles from './app.module.css';
 const App = () => {
 
   const [ingredients, setIngredients] = useState([])
+  const [isModalOpen, setIsModalOpen] = useState(true);
+
+  const onModalOpen = () => setIsModalOpen(true);
+  const onModalClose = () => setIsModalOpen(false);
+  const onKeyDown = (e: any) => {
+    if (isModalOpen && e.keyCode === 27) {
+      setIsModalOpen(false);
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener('keydown', onKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+    }
+  }, [])
 
   useEffect(() => {
     const apiUrl = 'https://norma.nomoreparties.space/api/ingredients';
@@ -32,9 +49,10 @@ const App = () => {
         {!!ingredients.length && <BurgerIngredients data={ingredients}/>}
         {!!ingredients.length && <BurgerConstructor data={ingredients}/>}
       </main>
-      <Modal onClose={()=>{}}>
-        <h1>HHHHHHHHHHHHH</h1>
-      </Modal>
+      {isModalOpen && (
+        <Modal onClose={onModalClose} header='Детали ингредиента'>
+        </Modal>
+      )}
     </div>
   );
 };
