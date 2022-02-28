@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Tab} from '@ya.praktikum/react-developer-burger-ui-components'
 import BurgerIngredientsItem from "../burger-ingredients-item/burger-ingredients-item";
-import {Data} from "../../utils/data";
+import {Data} from "../../models/data";
 import styles from './burger-ingredients.module.css';
 
 type Props = {
