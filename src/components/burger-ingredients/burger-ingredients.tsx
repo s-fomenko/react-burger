@@ -6,9 +6,10 @@ import styles from './burger-ingredients.module.css';
 
 type Props = {
   data: Data[];
+  chooseCurrent: (ingredient: Data, modalType: string) => void;
 }
 
-const BurgerIngredients = ({ data }: Props) => {
+const BurgerIngredients = ({ data, chooseCurrent }: Props) => {
   const [current, setCurrent] = useState('bun');
 
   return (
@@ -31,7 +32,7 @@ const BurgerIngredients = ({ data }: Props) => {
             <h2 className='text text_type_main-medium'>Булки</h2>
             <ul className={`${styles.list} ${styles.innerList}`}>
               {data.filter(item => item.type === 'bun').map(item => (
-                <li key={item.name}>
+                <li key={item.name} onClick={() => chooseCurrent(item, 'ingredient')}>
                   <BurgerIngredientsItem name={item.name} price={item.price} image={item.image} />
                 </li>
               ))}
@@ -41,7 +42,7 @@ const BurgerIngredients = ({ data }: Props) => {
             <h2 className='text text_type_main-medium'>Соусы</h2>
             <ul className={`${styles.list} ${styles.innerList}`}>
               {data.filter(item => item.type === 'sauce').map(item => (
-                <li key={item.name}>
+                <li key={item.name} onClick={() => chooseCurrent(item, 'ingredient')}>
                   <BurgerIngredientsItem name={item.name} price={item.price} image={item.image} />
                 </li>
               ))}
@@ -51,7 +52,7 @@ const BurgerIngredients = ({ data }: Props) => {
             <h2 className='text text_type_main-medium'>Начинки</h2>
             <ul className={`${styles.list} ${styles.innerList}`}>
               {data.filter(item => item.type === 'main').map(item => (
-                <li key={item.name}>
+                <li key={item.name} onClick={() => chooseCurrent(item, 'ingredient')}>
                   <BurgerIngredientsItem name={item.name} price={item.price} image={item.image} />
                 </li>
               ))}
