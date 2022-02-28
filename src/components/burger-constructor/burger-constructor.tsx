@@ -5,9 +5,10 @@ import styles from "./burger-constructor.module.css";
 
 type Props = {
   data: Data[];
+  showTotal: (ingredient: Data | null, modalType: string) => void;
 }
 
-const BurgerConstructor = ({ data }: Props) => {
+const BurgerConstructor = ({ data, showTotal }: Props) => {
   const [lockedElement] = data;
 
   return (
@@ -49,7 +50,7 @@ const BurgerConstructor = ({ data }: Props) => {
           <span className='text text_type_digits-medium'>610</span>
           <CurrencyIcon type="primary" />
         </div>
-        <Button type="primary" size="large">
+        <Button type="primary" size="large" onClick={() => showTotal(null, 'total')}>
           Оформить заказ
         </Button>
       </div>

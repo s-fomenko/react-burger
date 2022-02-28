@@ -6,7 +6,7 @@ import styles from './burger-ingredients.module.css';
 
 type Props = {
   data: Data[];
-  chooseCurrent: (ingredient: Data, modalType: string) => void;
+  chooseCurrent: (ingredient: Data | null, modalType: string) => void;
 }
 
 const BurgerIngredients = ({ data, chooseCurrent }: Props) => {

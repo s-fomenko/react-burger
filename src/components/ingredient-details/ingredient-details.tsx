@@ -14,7 +14,7 @@ const IngredientDetails = ({ ingredient }: Props) => {
           <img className={styles.image} src={ingredient.image_large} alt={ingredient.name}/>
         </div>
         <p className={`${styles.name} text text_type_main-medium`}>{ingredient.name}</p>
-        <ul className={styles.list}>
+        <ul className={`${styles.list} text_color_inactive`}>
           <li className={styles.item}>
             <span className='text text_type_main-default'>Калории,ккал</span>
             <span className='text text_type_digits-default'>{ingredient.calories}</span>
