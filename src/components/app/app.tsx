@@ -26,7 +26,7 @@ const App = () => {
     setModalType('');
   };
   const onKeyDown = (e: any) => {
-    if (isModalOpen && e.keyCode === 27) {
+    if (isModalOpen && e.key === 'Escape') {
       setIsModalOpen(false);
     }
   }

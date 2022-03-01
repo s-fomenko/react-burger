@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {Tab} from '@ya.praktikum/react-developer-burger-ui-components'
 import BurgerIngredientsItem from "../burger-ingredients-item/burger-ingredients-item";
 import {Data} from "../../models/data";
@@ -14,7 +14,9 @@ const BurgerIngredients = ({ data, chooseCurrent }: Props) => {
 
   const bunArr = data.filter(item => item.type === 'bun');
   const sauceArr = data.filter(item => item.type === 'sauce');
-  const mainArr = data.filter(item => item.type === ',main');
+  const mainArr = data.filter(item => item.type === 'main');
+
+  const chooseCurrentItem = useCallback(chooseCurrent, [chooseCurrent])
 
   return (
     <section className={styles.container}>
@@ -36,8 +38,8 @@ const BurgerIngredients = ({ data, chooseCurrent }: Props) => {
             <h2 className='text text_type_main-medium'>Булки</h2>
             <ul className={`${styles.list} ${styles.innerList}`}>
               {bunArr.map(item => (
-                <li key={item.name} onClick={() => chooseCurrent(item, 'ingredient')}>
-                  <BurgerIngredientsItem name={item.name} price={item.price} image={item.image} />
+                <li key={item._id}>
+                  <BurgerIngredientsItem ingredient={item} chooseCurrentItem={chooseCurrentItem} />
                 </li>
               ))}
             </ul>
@@ -46,8 +48,8 @@ const BurgerIngredients = ({ data, chooseCurrent }: Props) => {
             <h2 className='text text_type_main-medium'>Соусы</h2>
             <ul className={`${styles.list} ${styles.innerList}`}>
               {sauceArr.map(item => (
-                <li key={item.name} onClick={() => chooseCurrent(item, 'ingredient')}>
-                  <BurgerIngredientsItem name={item.name} price={item.price} image={item.image} />
+                <li key={item._id}>
+                  <BurgerIngredientsItem ingredient={item}  chooseCurrentItem={chooseCurrentItem} />
                 </li>
               ))}
             </ul>
@@ -56,8 +58,8 @@ const BurgerIngredients = ({ data, chooseCurrent }: Props) => {
             <h2 className='text text_type_main-medium'>Начинки</h2>
             <ul className={`${styles.list} ${styles.innerList}`}>
               {mainArr.map(item => (
-                <li key={item.name} onClick={() => chooseCurrent(item, 'ingredient')}>
-                  <BurgerIngredientsItem name={item.name} price={item.price} image={item.image} />
+                <li key={item._id}>
+                  <BurgerIngredientsItem ingredient={item}  chooseCurrentItem={chooseCurrentItem} />
                 </li>
               ))}
             </ul>

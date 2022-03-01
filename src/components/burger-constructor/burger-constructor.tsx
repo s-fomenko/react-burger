@@ -24,8 +24,8 @@ const BurgerConstructor = ({ data, showTotal }: Props) => {
       </div>
       <div className={`${styles.scrollContainer} pt-4 pb-4`}>
         <ul className={styles.list}>
-          {data.filter(item => item.type !== 'bun').map(item => (
-            <li key={item.name} className={`${styles.item} mb-4`}>
+          {data.filter(item => item.type !== 'bun').map((item, index) => (
+            <li key={index} className={`${styles.item} mb-4`}>
               <DragIcon type="primary" />
               <ConstructorElement
                 text={item.name}
