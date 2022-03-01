@@ -45,6 +45,9 @@ const App = () => {
     const getIngridients = async () => {
       try {
         const res = await fetch(apiUrl);
+        if (!res.ok) {
+          throw new Error('Ответ сети был не ok.');
+        }
         const data = await res.json();
         setIngredients(data.data);
       } catch (e) {
@@ -62,9 +65,14 @@ const App = () => {
         {!!ingredients.length && <BurgerIngredients data={ingredients} chooseCurrent={onModalOpen} />}
         {!!ingredients.length && <BurgerConstructor data={ingredients} showTotal={onModalOpen} />}
       </main>
-      {isModalOpen && (
-        <Modal onClose={onModalClose} header={modalType === 'ingredient' ? 'Детали ингредиента' : ''}>
-          {modalType === 'ingredient' ? <IngredientDetails ingredient={currentIngredient}/> : <OrderDetails />}
+      {isModalOpen && modalType === 'ingredient' && (
+        <Modal onClose={onModalClose} header='Детали ингредиента'>
+          <IngredientDetails ingredient={currentIngredient} />
+        </Modal>
+      )}
+      {isModalOpen && modalType === 'total' && (
+        <Modal onClose={onModalClose}>
+          <OrderDetails />
         </Modal>
       )}
     </div>

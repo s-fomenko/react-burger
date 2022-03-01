@@ -12,6 +12,10 @@ type Props = {
 const BurgerIngredients = ({ data, chooseCurrent }: Props) => {
   const [current, setCurrent] = useState('bun');
 
+  const bunArr = data.filter(item => item.type === 'bun');
+  const sauceArr = data.filter(item => item.type === 'sauce');
+  const mainArr = data.filter(item => item.type === ',main');
+
   return (
     <section className={styles.container}>
       <h1 className={`${styles.title} pt-10 pb-5 text text_type_main-large`}>Соберите бургер</h1>
@@ -31,7 +35,7 @@ const BurgerIngredients = ({ data, chooseCurrent }: Props) => {
           <li className='mb-10'>
             <h2 className='text text_type_main-medium'>Булки</h2>
             <ul className={`${styles.list} ${styles.innerList}`}>
-              {data.filter(item => item.type === 'bun').map(item => (
+              {bunArr.map(item => (
                 <li key={item.name} onClick={() => chooseCurrent(item, 'ingredient')}>
                   <BurgerIngredientsItem name={item.name} price={item.price} image={item.image} />
                 </li>
@@ -41,7 +45,7 @@ const BurgerIngredients = ({ data, chooseCurrent }: Props) => {
           <li className='mb-10'>
             <h2 className='text text_type_main-medium'>Соусы</h2>
             <ul className={`${styles.list} ${styles.innerList}`}>
-              {data.filter(item => item.type === 'sauce').map(item => (
+              {sauceArr.map(item => (
                 <li key={item.name} onClick={() => chooseCurrent(item, 'ingredient')}>
                   <BurgerIngredientsItem name={item.name} price={item.price} image={item.image} />
                 </li>
@@ -51,7 +55,7 @@ const BurgerIngredients = ({ data, chooseCurrent }: Props) => {
           <li>
             <h2 className='text text_type_main-medium'>Начинки</h2>
             <ul className={`${styles.list} ${styles.innerList}`}>
-              {data.filter(item => item.type === 'main').map(item => (
+              {mainArr.map(item => (
                 <li key={item.name} onClick={() => chooseCurrent(item, 'ingredient')}>
                   <BurgerIngredientsItem name={item.name} price={item.price} image={item.image} />
                 </li>
