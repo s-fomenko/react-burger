@@ -1,0 +1,26 @@
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  background: #1C1C21;
+  border: 1px solid rgba(76, 76, 255, 0.2);
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 720px;
+  box-shadow:
+    0 24px 32px rgba(0, 0, 0, 0.04),
+    0 16px 24px rgba(0, 0, 0, 0.04),
+    0 4px 8px rgba(0, 0, 0, 0.04),
+    0 0 1px rgba(0, 0, 0, 0.04);
+  border-radius: 40px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}

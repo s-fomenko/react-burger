@@ -1,0 +1,46 @@
+.container {
+  max-width: 600px;
+}
+
+.blockedElement {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+}
+
+.scrollContainer {
+  max-height: 465px;
+  overflow-y: auto;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.orderWrapper {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 40px;
+}
+
+.total {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+}
+
+.total svg {
+  width: 36px;
+  height: 36px;
+}
