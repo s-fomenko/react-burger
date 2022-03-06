@@ -1,12 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import AppHeader from "../app-header/app-header";
-import BurgerIngredients from "../burger-ingredients/burger-ingredients";
-import BurgerConstructor from "../burger-constructor/burger-constructor";
-import IngredientDetails from "../ingredient-details/ingredient-details";
-import OrderDetails from "../order-details/order-details";
-import Modal from "../modal/modal";
-import {Data} from "../../models/data";
-import styles from './app.module.css';
+import AppHeader from '../app-header/app-header';
+import BurgerIngredients from '../burger-ingredients/burger-ingredients';
+import BurgerConstructor from '../burger-constructor/burger-constructor';
+import IngredientDetails from '../ingredient-details/ingredient-details';
+import OrderDetails from '../order-details/order-details';
+import Modal from '../modal/modal';
+import {Data} from '../../models/data';
+import {IngredientsContext} from '../../ingriedientsContext';
+import styles from "./app.module.css";
 
 const App = () => {
 
@@ -59,23 +60,25 @@ const App = () => {
   }, [])
 
   return (
-    <div className={styles.app}>
-      <AppHeader/>
-      <main className={`${styles.main} pl-5 pr-5`}>
-        {!!ingredients.length && <BurgerIngredients data={ingredients} chooseCurrent={onModalOpen} />}
-        {!!ingredients.length && <BurgerConstructor data={ingredients} showTotal={onModalOpen} />}
-      </main>
-      {isModalOpen && modalType === 'ingredient' && (
-        <Modal onClose={onModalClose} header='Детали ингредиента'>
-          <IngredientDetails ingredient={currentIngredient} />
-        </Modal>
-      )}
-      {isModalOpen && modalType === 'total' && (
-        <Modal onClose={onModalClose}>
-          <OrderDetails />
-        </Modal>
-      )}
-    </div>
+    <IngredientsContext.Provider value={ingredients}>
+      <div className={styles.app}>
+        <AppHeader/>
+        <main className={`${styles.main} pl-5 pr-5`}>
+          <BurgerIngredients chooseCurrent={onModalOpen} />
+          <BurgerConstructor showTotal={onModalOpen} />
+        </main>
+        {isModalOpen && modalType === 'ingredient' && (
+          <Modal onClose={onModalClose} header='Детали ингредиента'>
+            <IngredientDetails ingredient={currentIngredient} />
+          </Modal>
+        )}
+        {isModalOpen && modalType === 'total' && (
+          <Modal onClose={onModalClose}>
+            <OrderDetails />
+          </Modal>
+        )}
+      </div>
+    </IngredientsContext.Provider>
   );
 };
 

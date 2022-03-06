@@ -1,30 +1,39 @@
-import React from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import { ConstructorElement, DragIcon, Button, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components'
-import {Data} from "../../models/data";
-import styles from "./burger-constructor.module.css";
+import {Data} from '../../models/data';
+import styles from './burger-constructor.module.css';
+import {IngredientsContext} from "../../ingriedientsContext";
 
 type Props = {
-  data: Data[];
   showTotal: (ingredient: Data | null, modalType: string) => void;
 }
 
-const BurgerConstructor = ({ data, showTotal }: Props) => {
-  const [lockedElement] = data;
+const BurgerConstructor = ({ showTotal }: Props) => {
+  const ingredients: Data[] = useContext(IngredientsContext);
+  const [burgerBun, setBurgerBun] = useState<Data | null>(null);
+
+  const onButtonClick = () => showTotal(null, 'total');
+
+  useEffect(() => {
+    if (ingredients.length) {
+      setBurgerBun(ingredients[0]);
+    }
+  }, [ingredients])
 
   return (
     <section className={`${styles.container} pt-25`}>
-      <div className={styles.blockedElement}>
+      {burgerBun && <div className={styles.blockedElement}>
         <ConstructorElement
           type='top'
           isLocked={true}
-          text={`${lockedElement.name} (верх)`}
-          thumbnail={lockedElement.image}
-          price={lockedElement.price}
+          text={`${burgerBun.name} (верх)`}
+          thumbnail={burgerBun.image}
+          price={burgerBun.price}
         />
-      </div>
+      </div>}
       <div className={`${styles.scrollContainer} pt-4 pb-4`}>
         <ul className={styles.list}>
-          {data.filter(item => item.type !== 'bun').map((item, index) => (
+          {ingredients.filter(item => item.type !== 'bun').map((item, index) => (
             <li key={index} className={`${styles.item} mb-4`}>
               <DragIcon type="primary" />
               <ConstructorElement
@@ -36,21 +45,21 @@ const BurgerConstructor = ({ data, showTotal }: Props) => {
           ))}
         </ul>
       </div>
-      <div className={styles.blockedElement}>
+      {burgerBun && <div className={styles.blockedElement}>
         <ConstructorElement
           type='bottom'
           isLocked={true}
-          text={`${lockedElement.name} (низ)`}
-          thumbnail={lockedElement.image}
-          price={lockedElement.price}
+          text={`${burgerBun.name} (низ)`}
+          thumbnail={burgerBun.image}
+          price={burgerBun.price}
         />
-      </div>
+      </div>}
       <div className={`${styles.orderWrapper} mt-10`}>
         <div className={styles.total}>
           <span className='text text_type_digits-medium'>610</span>
           <CurrencyIcon type="primary" />
         </div>
-        <Button type="primary" size="large" onClick={() => showTotal(null, 'total')}>
+        <Button type="primary" size="large" onClick={onButtonClick}>
           Оформить заказ
         </Button>
       </div>
