@@ -2,7 +2,7 @@ import React, {useCallback, useContext, useState} from 'react';
 import {Tab} from '@ya.praktikum/react-developer-burger-ui-components'
 import BurgerIngredientsItem from "../burger-ingredients-item/burger-ingredients-item";
 import {Data} from '../../models/data';
-import {IngredientsContext} from '../../ingriedientsContext';
+import {IngredientsContext} from '../../context/ingriedientsContext';
 import styles from './burger-ingredients.module.css';
 
 type Props = {

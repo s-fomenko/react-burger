@@ -6,12 +6,14 @@ import IngredientDetails from '../ingredient-details/ingredient-details';
 import OrderDetails from '../order-details/order-details';
 import Modal from '../modal/modal';
 import {Data} from '../../models/data';
-import {IngredientsContext} from '../../ingriedientsContext';
+import {IngredientsContext} from '../../context/ingriedientsContext';
+import {OrderContext} from "../../context/orderContext";
 import styles from "./app.module.css";
 
 const App = () => {
 
-  const [ingredients, setIngredients] = useState([])
+  const [ingredients, setIngredients] = useState([]);
+  const [orderNumber, setOrderNumber] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState('');
   const [currentIngredient, setCurrentIngredient] = useState<Data | null>(null);
@@ -61,23 +63,25 @@ const App = () => {
 
   return (
     <IngredientsContext.Provider value={ingredients}>
-      <div className={styles.app}>
-        <AppHeader/>
-        <main className={`${styles.main} pl-5 pr-5`}>
-          <BurgerIngredients chooseCurrent={onModalOpen} />
-          <BurgerConstructor showTotal={onModalOpen} />
-        </main>
-        {isModalOpen && modalType === 'ingredient' && (
-          <Modal onClose={onModalClose} header='Детали ингредиента'>
-            <IngredientDetails ingredient={currentIngredient} />
-          </Modal>
-        )}
-        {isModalOpen && modalType === 'total' && (
-          <Modal onClose={onModalClose}>
-            <OrderDetails />
-          </Modal>
-        )}
-      </div>
+      <OrderContext.Provider value={orderNumber}>
+        <div className={styles.app}>
+          <AppHeader/>
+          <main className={`${styles.main} pl-5 pr-5`}>
+            <BurgerIngredients chooseCurrent={onModalOpen} />
+            <BurgerConstructor showTotal={onModalOpen} onOrderRequest={setOrderNumber} />
+          </main>
+          {isModalOpen && modalType === 'ingredient' && (
+            <Modal onClose={onModalClose} header='Детали ингредиента'>
+              <IngredientDetails ingredient={currentIngredient} />
+            </Modal>
+          )}
+          {isModalOpen && modalType === 'total' && (
+            <Modal onClose={onModalClose}>
+              <OrderDetails />
+            </Modal>
+          )}
+        </div>
+      </OrderContext.Provider>
     </IngredientsContext.Provider>
   );
 };
