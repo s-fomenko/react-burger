@@ -1,16 +1,20 @@
 import React, {useEffect, useState} from 'react';
-import AppHeader from "../app-header/app-header";
-import BurgerIngredients from "../burger-ingredients/burger-ingredients";
-import BurgerConstructor from "../burger-constructor/burger-constructor";
-import IngredientDetails from "../ingredient-details/ingredient-details";
-import OrderDetails from "../order-details/order-details";
-import Modal from "../modal/modal";
-import {Data} from "../../models/data";
-import styles from './app.module.css';
+import AppHeader from '../app-header/app-header';
+import BurgerIngredients from '../burger-ingredients/burger-ingredients';
+import BurgerConstructor from '../burger-constructor/burger-constructor';
+import IngredientDetails from '../ingredient-details/ingredient-details';
+import OrderDetails from '../order-details/order-details';
+import Modal from '../modal/modal';
+import {Data} from '../../models/data';
+import {IngredientsContext} from '../../context/ingriedientsContext';
+import {OrderContext} from "../../context/orderContext";
+import {BASE_API_URL} from "../../constants/api";
+import styles from "./app.module.css";
 
 const App = () => {
 
-  const [ingredients, setIngredients] = useState([])
+  const [ingredients, setIngredients] = useState([]);
+  const [orderNumber, setOrderNumber] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState('');
   const [currentIngredient, setCurrentIngredient] = useState<Data | null>(null);
@@ -40,9 +44,9 @@ const App = () => {
   }, [isModalOpen])
 
   useEffect(() => {
-    const apiUrl = 'https://norma.nomoreparties.space/api/ingredients';
+    const apiUrl = `${BASE_API_URL}ingredients`;
 
-    const getIngridients = async () => {
+    const getIngredients = async () => {
       try {
         const res = await fetch(apiUrl);
         if (!res.ok) {
@@ -55,27 +59,31 @@ const App = () => {
       }
     }
 
-    getIngridients();
+    getIngredients();
   }, [])
 
   return (
-    <div className={styles.app}>
-      <AppHeader/>
-      <main className={`${styles.main} pl-5 pr-5`}>
-        {!!ingredients.length && <BurgerIngredients data={ingredients} chooseCurrent={onModalOpen} />}
-        {!!ingredients.length && <BurgerConstructor data={ingredients} showTotal={onModalOpen} />}
-      </main>
-      {isModalOpen && modalType === 'ingredient' && (
-        <Modal onClose={onModalClose} header='Детали ингредиента'>
-          <IngredientDetails ingredient={currentIngredient} />
-        </Modal>
-      )}
-      {isModalOpen && modalType === 'total' && (
-        <Modal onClose={onModalClose}>
-          <OrderDetails />
-        </Modal>
-      )}
-    </div>
+    <IngredientsContext.Provider value={ingredients}>
+      <OrderContext.Provider value={orderNumber}>
+        <div className={styles.app}>
+          <AppHeader/>
+          <main className={`${styles.main} pl-5 pr-5`}>
+            <BurgerIngredients chooseCurrent={onModalOpen} />
+            <BurgerConstructor showTotal={onModalOpen} onOrderRequest={setOrderNumber} />
+          </main>
+          {isModalOpen && modalType === 'ingredient' && (
+            <Modal onClose={onModalClose} header='Детали ингредиента'>
+              <IngredientDetails ingredient={currentIngredient} />
+            </Modal>
+          )}
+          {isModalOpen && modalType === 'total' && (
+            <Modal onClose={onModalClose}>
+              <OrderDetails />
+            </Modal>
+          )}
+        </div>
+      </OrderContext.Provider>
+    </IngredientsContext.Provider>
   );
 };
 

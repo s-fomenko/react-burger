@@ -1,30 +1,72 @@
-import React from 'react';
+import React, {Dispatch, SetStateAction, useContext, useEffect, useMemo, useState} from 'react';
 import { ConstructorElement, DragIcon, Button, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components'
-import {Data} from "../../models/data";
-import styles from "./burger-constructor.module.css";
+import {Data} from '../../models/data';
+import {IngredientsContext} from "../../context/ingriedientsContext";
+import {BASE_API_URL} from "../../constants/api";
+import styles from './burger-constructor.module.css';
 
 type Props = {
-  data: Data[];
   showTotal: (ingredient: Data | null, modalType: string) => void;
+  onOrderRequest: Dispatch<SetStateAction<number | null>>;
 }
 
-const BurgerConstructor = ({ data, showTotal }: Props) => {
-  const [lockedElement] = data;
+const BurgerConstructor = ({ showTotal, onOrderRequest }: Props) => {
+  const ingredients: Data[] = useContext(IngredientsContext);
+  const [burgerBun, setBurgerBun] = useState<Data | null>(null);
+  const [burgerFilling, setBurgerFilling] = useState<Data[]>([]);
+
+  useEffect(() => {
+    if (ingredients.length) {
+      setBurgerBun(ingredients[0]);
+      setBurgerFilling(ingredients.filter(item => item.type !== 'bun'));
+    }
+  }, [ingredients])
+
+  const totalPrice = useMemo(() => {
+    const bunPrice = burgerBun ? burgerBun.price * 2 : 0;
+    const fillingPrice = burgerFilling.length && burgerFilling.reduce((prev, curr) => {
+      return prev + curr.price
+    } ,0)
+    return bunPrice + fillingPrice
+  }, [burgerBun, burgerFilling]);
+
+  const onButtonClick = async () => {
+    const apiUrl = `${BASE_API_URL}orders`;
+    if (burgerBun && burgerFilling) {
+      try {
+        const res = await fetch(apiUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({"ingredients": [burgerBun._id, ...burgerFilling.map(item => item._id)]})
+        });
+        if (!res.ok) {
+          throw new Error('Ответ сети был не ok.');
+        }
+        const data = await res.json();
+        onOrderRequest(data.order.number);
+        showTotal(null, 'total');
+      } catch (e) {
+        console.log(`Error: ${e}`)
+      }
+    }
+  };
 
   return (
     <section className={`${styles.container} pt-25`}>
-      <div className={styles.blockedElement}>
+      {burgerBun && <div className={styles.blockedElement}>
         <ConstructorElement
           type='top'
           isLocked={true}
-          text={`${lockedElement.name} (верх)`}
-          thumbnail={lockedElement.image}
-          price={lockedElement.price}
+          text={`${burgerBun.name} (верх)`}
+          thumbnail={burgerBun.image}
+          price={burgerBun.price}
         />
-      </div>
+      </div>}
       <div className={`${styles.scrollContainer} pt-4 pb-4`}>
         <ul className={styles.list}>
-          {data.filter(item => item.type !== 'bun').map((item, index) => (
+          {burgerFilling.map((item, index) => (
             <li key={index} className={`${styles.item} mb-4`}>
               <DragIcon type="primary" />
               <ConstructorElement
@@ -36,21 +78,21 @@ const BurgerConstructor = ({ data, showTotal }: Props) => {
           ))}
         </ul>
       </div>
-      <div className={styles.blockedElement}>
+      {burgerBun && <div className={styles.blockedElement}>
         <ConstructorElement
           type='bottom'
           isLocked={true}
-          text={`${lockedElement.name} (низ)`}
-          thumbnail={lockedElement.image}
-          price={lockedElement.price}
+          text={`${burgerBun.name} (низ)`}
+          thumbnail={burgerBun.image}
+          price={burgerBun.price}
         />
-      </div>
+      </div>}
       <div className={`${styles.orderWrapper} mt-10`}>
         <div className={styles.total}>
-          <span className='text text_type_digits-medium'>610</span>
+          <span className='text text_type_digits-medium'>{totalPrice}</span>
           <CurrencyIcon type="primary" />
         </div>
-        <Button type="primary" size="large" onClick={() => showTotal(null, 'total')}>
+        <Button type="primary" size="large" onClick={onButtonClick}>
           Оформить заказ
         </Button>
       </div>
