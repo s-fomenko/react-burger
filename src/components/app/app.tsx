@@ -8,12 +8,13 @@ import Modal from '../modal/modal';
 import {Data} from '../../models/data';
 import {IngredientsContext} from '../../context/ingriedientsContext';
 import {OrderContext} from "../../context/orderContext";
+import {BASE_API_URL} from "../../constants/api";
 import styles from "./app.module.css";
 
 const App = () => {
 
   const [ingredients, setIngredients] = useState([]);
-  const [orderNumber, setOrderNumber] = useState(0);
+  const [orderNumber, setOrderNumber] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState('');
   const [currentIngredient, setCurrentIngredient] = useState<Data | null>(null);
@@ -43,9 +44,9 @@ const App = () => {
   }, [isModalOpen])
 
   useEffect(() => {
-    const apiUrl = 'https://norma.nomoreparties.space/api/ingredients';
+    const apiUrl = `${BASE_API_URL}ingredients`;
 
-    const getIngridients = async () => {
+    const getIngredients = async () => {
       try {
         const res = await fetch(apiUrl);
         if (!res.ok) {
@@ -58,7 +59,7 @@ const App = () => {
       }
     }
 
-    getIngridients();
+    getIngredients();
   }, [])
 
   return (

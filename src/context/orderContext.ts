@@ -1,3 +1,3 @@
 import React from 'react';
 
-export const OrderContext = React.createContext(0);
+export const OrderContext = React.createContext<number | null>(null);

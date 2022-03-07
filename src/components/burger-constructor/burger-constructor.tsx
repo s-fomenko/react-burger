@@ -1,19 +1,19 @@
-import React, {Dispatch, SetStateAction, useContext, useEffect, useState} from 'react';
+import React, {Dispatch, SetStateAction, useContext, useEffect, useMemo, useState} from 'react';
 import { ConstructorElement, DragIcon, Button, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components'
 import {Data} from '../../models/data';
-import styles from './burger-constructor.module.css';
 import {IngredientsContext} from "../../context/ingriedientsContext";
+import {BASE_API_URL} from "../../constants/api";
+import styles from './burger-constructor.module.css';
 
 type Props = {
   showTotal: (ingredient: Data | null, modalType: string) => void;
-  onOrderRequest: Dispatch<SetStateAction<number>>;
+  onOrderRequest: Dispatch<SetStateAction<number | null>>;
 }
 
 const BurgerConstructor = ({ showTotal, onOrderRequest }: Props) => {
   const ingredients: Data[] = useContext(IngredientsContext);
   const [burgerBun, setBurgerBun] = useState<Data | null>(null);
   const [burgerFilling, setBurgerFilling] = useState<Data[]>([]);
-  const [totalPrice, setTotalPrice] = useState(0);
 
   useEffect(() => {
     if (ingredients.length) {
@@ -22,40 +22,35 @@ const BurgerConstructor = ({ showTotal, onOrderRequest }: Props) => {
     }
   }, [ingredients])
 
-  useEffect(() => {
+  const totalPrice = useMemo(() => {
     const bunPrice = burgerBun ? burgerBun.price * 2 : 0;
     const fillingPrice = burgerFilling.length && burgerFilling.reduce((prev, curr) => {
       return prev + curr.price
     } ,0)
+    return bunPrice + fillingPrice
+  }, [burgerBun, burgerFilling]);
 
-    setTotalPrice(bunPrice + fillingPrice);
-  }, [burgerBun, burgerFilling])
-
-  const onButtonClick = () => {
-    const apiUrl = 'https://norma.nomoreparties.space/api/orders';
-
-    const postOrder = async () => {
-      if (burgerBun && burgerFilling) {
-        try {
-          const res = await fetch(apiUrl, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({"ingredients": [burgerBun._id, ...burgerFilling.map(item => item._id)]})
-          });
-          if (!res.ok) {
-            throw new Error('Ответ сети был не ok.');
-          }
-          const data = await res.json();
-          onOrderRequest(data.order.number);
-        } catch (e) {
-          console.log(`Error: ${e}`)
+  const onButtonClick = async () => {
+    const apiUrl = `${BASE_API_URL}orders`;
+    if (burgerBun && burgerFilling) {
+      try {
+        const res = await fetch(apiUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({"ingredients": [burgerBun._id, ...burgerFilling.map(item => item._id)]})
+        });
+        if (!res.ok) {
+          throw new Error('Ответ сети был не ok.');
         }
+        const data = await res.json();
+        onOrderRequest(data.order.number);
+        showTotal(null, 'total');
+      } catch (e) {
+        console.log(`Error: ${e}`)
       }
-    };
-    postOrder();
-    showTotal(null, 'total')
+    }
   };
 
   return (
