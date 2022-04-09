@@ -3,7 +3,7 @@ import {Tab} from '@ya.praktikum/react-developer-burger-ui-components'
 import BurgerIngredientsItem from "../burger-ingredients-item/burger-ingredients-item";
 import {Data} from '../../models/data';
 import {useSelector} from "react-redux";
-import {selectItems} from "../../services/reducers/burger-ingredients";
+import {selectIngredients} from "../../services/reducers/burger-ingredients";
 import styles from './burger-ingredients.module.css';
 
 type Props = {
@@ -12,7 +12,7 @@ type Props = {
 
 const BurgerIngredients = ({ chooseCurrent }: Props) => {
   const [current, setCurrent] = useState('bun');
-  const ingredients: Data[] = useSelector(selectItems);
+  const ingredients: Data[] = useSelector(selectIngredients);
 
   const bunArr = ingredients.filter(item => item.type === 'bun');
   const sauceArr = ingredients.filter(item => item.type === 'sauce');

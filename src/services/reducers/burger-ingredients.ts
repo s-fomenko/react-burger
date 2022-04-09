@@ -28,7 +28,7 @@ const initialState: Ingredients = {
 }
 
 export const ingredientsSlice = createSlice({
-  name: 'ingredients',
+  name: 'burgerIngredients',
   initialState,
   reducers: {
     // increment: (state) => {
@@ -55,6 +55,6 @@ export const ingredientsSlice = createSlice({
 // export const { increment } = ingredientsSlice.actions
 
 // selectors
-export const selectItems = (state: { ingredients: Ingredients }) => state.ingredients.items
+export const selectIngredients = (state: { burgerIngredients: Ingredients }) => state.burgerIngredients.items;
 
 export default ingredientsSlice.reducer

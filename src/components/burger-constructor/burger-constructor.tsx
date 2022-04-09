@@ -2,8 +2,9 @@ import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'rea
 import {Button, ConstructorElement, CurrencyIcon, DragIcon} from '@ya.praktikum/react-developer-burger-ui-components'
 import {Data} from '../../models/data';
 import {BASE_API_URL} from "../../constants/api";
-import {useSelector} from "react-redux";
-import {selectItems} from "../../services/reducers/burger-ingredients";
+import {useDispatch, useSelector} from "react-redux";
+import {selectIngredients} from "../../services/reducers/burger-ingredients";
+import {selectConstructorItems} from "../../services/reducers/burger-constructor";
 import styles from './burger-constructor.module.css';
 
 type Props = {
@@ -12,16 +13,12 @@ type Props = {
 }
 
 const BurgerConstructor = ({ showTotal, onOrderRequest }: Props) => {
-  const ingredients: Data[] = useSelector(selectItems);
-  const [burgerBun, setBurgerBun] = useState<Data | null>(null);
-  const [burgerFilling, setBurgerFilling] = useState<Data[]>([]);
+  const { burgerBun, burgerFilling } = useSelector(selectConstructorItems);
 
   useEffect(() => {
-    if (ingredients.length) {
-      setBurgerBun(ingredients[0]);
-      setBurgerFilling(ingredients.filter(item => item.type !== 'bun'));
-    }
-  }, [ingredients])
+    console.log('burgerBun', burgerBun);
+    console.log('burgerFilling', burgerFilling);
+  }, [burgerBun, burgerFilling])
 
   const totalPrice = useMemo(() => {
     const bunPrice = burgerBun ? burgerBun.price * 2 : 0;
@@ -88,15 +85,15 @@ const BurgerConstructor = ({ showTotal, onOrderRequest }: Props) => {
           price={burgerBun.price}
         />
       </div>}
-      <div className={`${styles.orderWrapper} mt-10`}>
+      {totalPrice > 0 && <div className={`${styles.orderWrapper} mt-10`}>
         <div className={styles.total}>
           <span className='text text_type_digits-medium'>{totalPrice}</span>
-          <CurrencyIcon type="primary" />
+          <CurrencyIcon type="primary"/>
         </div>
         <Button type="primary" size="large" onClick={onButtonClick}>
           Оформить заказ
         </Button>
-      </div>
+      </div>}
     </section>
   );
 };
