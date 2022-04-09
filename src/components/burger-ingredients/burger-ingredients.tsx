@@ -1,8 +1,9 @@
-import React, {useCallback, useContext, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {Tab} from '@ya.praktikum/react-developer-burger-ui-components'
 import BurgerIngredientsItem from "../burger-ingredients-item/burger-ingredients-item";
 import {Data} from '../../models/data';
-import {IngredientsContext} from '../../context/ingriedientsContext';
+import {useSelector} from "react-redux";
+import {selectItems} from "../../services/reducers/burger-ingredients";
 import styles from './burger-ingredients.module.css';
 
 type Props = {
@@ -11,7 +12,7 @@ type Props = {
 
 const BurgerIngredients = ({ chooseCurrent }: Props) => {
   const [current, setCurrent] = useState('bun');
-  const ingredients: Data[] = useContext(IngredientsContext);
+  const ingredients: Data[] = useSelector(selectItems);
 
   const bunArr = ingredients.filter(item => item.type === 'bun');
   const sauceArr = ingredients.filter(item => item.type === 'sauce');

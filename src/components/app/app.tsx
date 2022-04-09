@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import AppHeader from '../app-header/app-header';
 import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
@@ -6,18 +6,17 @@ import IngredientDetails from '../ingredient-details/ingredient-details';
 import OrderDetails from '../order-details/order-details';
 import Modal from '../modal/modal';
 import {Data} from '../../models/data';
-import {IngredientsContext} from '../../context/ingriedientsContext';
-import {OrderContext} from "../../context/orderContext";
-import {BASE_API_URL} from "../../constants/api";
-import styles from "./app.module.css";
+import {OrderContext} from '../../context/orderContext';
+import {useDispatch} from 'react-redux';
+import {getIngredients} from "../../services/reducers/burger-ingredients";
+import styles from './app.module.css';
 
 const App = () => {
-
-  const [ingredients, setIngredients] = useState([]);
   const [orderNumber, setOrderNumber] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState('');
   const [currentIngredient, setCurrentIngredient] = useState<Data | null>(null);
+  const dispatch = useDispatch();
 
   const onModalOpen = (ingredient: Data | null, modalType: string) => {
     setCurrentIngredient(ingredient);
@@ -29,11 +28,11 @@ const App = () => {
     setCurrentIngredient(null);
     setModalType('');
   };
-  const onKeyDown = (e: any) => {
+  const onKeyDown = useCallback((e: any) => {
     if (isModalOpen && e.key === 'Escape') {
       setIsModalOpen(false);
     }
-  }
+  }, [isModalOpen]);
 
   useEffect(() => {
     document.addEventListener('keydown', onKeyDown);
@@ -41,49 +40,32 @@ const App = () => {
     return () => {
       document.removeEventListener('keydown', onKeyDown);
     }
-  }, [isModalOpen])
+  }, [isModalOpen, onKeyDown])
 
   useEffect(() => {
-    const apiUrl = `${BASE_API_URL}ingredients`;
-
-    const getIngredients = async () => {
-      try {
-        const res = await fetch(apiUrl);
-        if (!res.ok) {
-          throw new Error('Ответ сети был не ok.');
-        }
-        const data = await res.json();
-        setIngredients(data.data);
-      } catch (e) {
-        console.log(`Error: ${e}`)
-      }
-    }
-
-    getIngredients();
-  }, [])
+    dispatch(getIngredients());
+  }, [dispatch])
 
   return (
-    <IngredientsContext.Provider value={ingredients}>
-      <OrderContext.Provider value={orderNumber}>
-        <div className={styles.app}>
-          <AppHeader/>
-          <main className={`${styles.main} pl-5 pr-5`}>
-            <BurgerIngredients chooseCurrent={onModalOpen} />
-            <BurgerConstructor showTotal={onModalOpen} onOrderRequest={setOrderNumber} />
-          </main>
-          {isModalOpen && modalType === 'ingredient' && (
-            <Modal onClose={onModalClose} header='Детали ингредиента'>
-              <IngredientDetails ingredient={currentIngredient} />
-            </Modal>
-          )}
-          {isModalOpen && modalType === 'total' && (
-            <Modal onClose={onModalClose}>
-              <OrderDetails />
-            </Modal>
-          )}
-        </div>
-      </OrderContext.Provider>
-    </IngredientsContext.Provider>
+    <OrderContext.Provider value={orderNumber}>
+      <div className={styles.app}>
+        <AppHeader/>
+        <main className={`${styles.main} pl-5 pr-5`}>
+          <BurgerIngredients chooseCurrent={onModalOpen} />
+          <BurgerConstructor showTotal={onModalOpen} onOrderRequest={setOrderNumber} />
+        </main>
+        {isModalOpen && modalType === 'ingredient' && (
+          <Modal onClose={onModalClose} header='Детали ингредиента'>
+            <IngredientDetails ingredient={currentIngredient} />
+          </Modal>
+        )}
+        {isModalOpen && modalType === 'total' && (
+          <Modal onClose={onModalClose}>
+            <OrderDetails />
+          </Modal>
+        )}
+      </div>
+    </OrderContext.Provider>
   );
 };
 

@@ -1,8 +1,9 @@
-import React, {Dispatch, SetStateAction, useContext, useEffect, useMemo, useState} from 'react';
-import { ConstructorElement, DragIcon, Button, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components'
+import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
+import {Button, ConstructorElement, CurrencyIcon, DragIcon} from '@ya.praktikum/react-developer-burger-ui-components'
 import {Data} from '../../models/data';
-import {IngredientsContext} from "../../context/ingriedientsContext";
 import {BASE_API_URL} from "../../constants/api";
+import {useSelector} from "react-redux";
+import {selectItems} from "../../services/reducers/burger-ingredients";
 import styles from './burger-constructor.module.css';
 
 type Props = {
@@ -11,7 +12,7 @@ type Props = {
 }
 
 const BurgerConstructor = ({ showTotal, onOrderRequest }: Props) => {
-  const ingredients: Data[] = useContext(IngredientsContext);
+  const ingredients: Data[] = useSelector(selectItems);
   const [burgerBun, setBurgerBun] = useState<Data | null>(null);
   const [burgerFilling, setBurgerFilling] = useState<Data[]>([]);
 
