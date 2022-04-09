@@ -15,11 +15,6 @@ type Props = {
 const BurgerConstructor = ({ showTotal, onOrderRequest }: Props) => {
   const { burgerBun, burgerFilling } = useSelector(selectConstructorItems);
 
-  useEffect(() => {
-    console.log('burgerBun', burgerBun);
-    console.log('burgerFilling', burgerFilling);
-  }, [burgerBun, burgerFilling])
-
   const totalPrice = useMemo(() => {
     const bunPrice = burgerBun ? burgerBun.price * 2 : 0;
     const fillingPrice = burgerFilling.length && burgerFilling.reduce((prev, curr) => {

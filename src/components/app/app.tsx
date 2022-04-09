@@ -7,7 +7,7 @@ import OrderDetails from '../order-details/order-details';
 import Modal from '../modal/modal';
 import {Data} from '../../models/data';
 import {OrderContext} from '../../context/orderContext';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {getIngredients} from "../../services/reducers/burger-ingredients";
 import styles from './app.module.css';
 
