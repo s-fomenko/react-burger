@@ -1,24 +1,18 @@
-import React, {useCallback, useState} from 'react';
-import {Tab} from '@ya.praktikum/react-developer-burger-ui-components'
+import React, { useState } from 'react';
+import { Tab } from '@ya.praktikum/react-developer-burger-ui-components'
 import BurgerIngredientsItem from "../burger-ingredients-item/burger-ingredients-item";
-import {Data} from '../../models/data';
-import {useSelector} from "react-redux";
-import {selectIngredients} from "../../services/reducers/burger-ingredients";
+import { Data } from '../../models/data';
+import { useSelector } from 'react-redux';
+import { selectIngredients } from '../../services/reducers/burger-ingredients';
 import styles from './burger-ingredients.module.css';
 
-type Props = {
-  chooseCurrent: (ingredient: Data | null, modalType: string) => void;
-}
-
-const BurgerIngredients = ({ chooseCurrent }: Props) => {
+const BurgerIngredients = () => {
   const [current, setCurrent] = useState('bun');
   const ingredients: Data[] = useSelector(selectIngredients);
 
   const bunArr = ingredients.filter(item => item.type === 'bun');
   const sauceArr = ingredients.filter(item => item.type === 'sauce');
   const mainArr = ingredients.filter(item => item.type === 'main');
-
-  const chooseCurrentItem = useCallback(chooseCurrent, [chooseCurrent])
 
   if (ingredients.length) {
     return (
@@ -42,7 +36,7 @@ const BurgerIngredients = ({ chooseCurrent }: Props) => {
               <ul className={`${styles.list} ${styles.innerList}`}>
                 {bunArr.map(item => (
                   <li key={item._id}>
-                    <BurgerIngredientsItem ingredient={item} chooseCurrentItem={chooseCurrentItem} />
+                    <BurgerIngredientsItem ingredient={item} />
                   </li>
                 ))}
               </ul>
@@ -52,7 +46,7 @@ const BurgerIngredients = ({ chooseCurrent }: Props) => {
               <ul className={`${styles.list} ${styles.innerList}`}>
                 {sauceArr.map(item => (
                   <li key={item._id}>
-                    <BurgerIngredientsItem ingredient={item}  chooseCurrentItem={chooseCurrentItem} />
+                    <BurgerIngredientsItem ingredient={item} />
                   </li>
                 ))}
               </ul>
@@ -62,7 +56,7 @@ const BurgerIngredients = ({ chooseCurrent }: Props) => {
               <ul className={`${styles.list} ${styles.innerList}`}>
                 {mainArr.map(item => (
                   <li key={item._id}>
-                    <BurgerIngredientsItem ingredient={item}  chooseCurrentItem={chooseCurrentItem} />
+                    <BurgerIngredientsItem ingredient={item} />
                   </li>
                 ))}
               </ul>

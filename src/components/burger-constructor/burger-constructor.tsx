@@ -1,19 +1,18 @@
-import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
-import {Button, ConstructorElement, CurrencyIcon, DragIcon} from '@ya.praktikum/react-developer-burger-ui-components'
-import {Data} from '../../models/data';
-import {BASE_API_URL} from "../../constants/api";
-import {useDispatch, useSelector} from "react-redux";
-import {selectIngredients} from "../../services/reducers/burger-ingredients";
-import {selectConstructorItems} from "../../services/reducers/burger-constructor";
+import React, { Dispatch, SetStateAction, useMemo } from 'react';
+import { Button, ConstructorElement, CurrencyIcon, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components'
+import { BASE_API_URL } from '../../constants/api';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectConstructorItems } from '../../services/reducers/burger-constructor';
+import { setModalType, toggleModalOpen } from '../../services/reducers/modal';
 import styles from './burger-constructor.module.css';
 
 type Props = {
-  showTotal: (ingredient: Data | null, modalType: string) => void;
   onOrderRequest: Dispatch<SetStateAction<number | null>>;
 }
 
-const BurgerConstructor = ({ showTotal, onOrderRequest }: Props) => {
+const BurgerConstructor = ({ onOrderRequest }: Props) => {
   const { burgerBun, burgerFilling } = useSelector(selectConstructorItems);
+  const dispatch = useDispatch();
 
   const totalPrice = useMemo(() => {
     const bunPrice = burgerBun ? burgerBun.price * 2 : 0;
@@ -39,7 +38,8 @@ const BurgerConstructor = ({ showTotal, onOrderRequest }: Props) => {
         }
         const data = await res.json();
         onOrderRequest(data.order.number);
-        showTotal(null, 'total');
+        dispatch(setModalType('total'));
+        dispatch(toggleModalOpen());
       } catch (e) {
         console.log(`Error: ${e}`)
       }

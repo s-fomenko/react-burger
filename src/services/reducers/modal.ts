@@ -19,16 +19,22 @@ import {Data} from "../../models/data";
 //   }
 // );
 
-type Order = {
-  ingredients: string[];
+type Modal = {
+  currentItem: Data | null;
+  orderIngredients: string[];
+  modalType: string;
+  isModalOpen: boolean;
 };
 
-const initialState: Order = {
-  ingredients: [],
+const initialState: Modal = {
+  currentItem: null,
+  orderIngredients: [],
+  modalType: '',
+  isModalOpen: false,
 }
 
-export const orderSlice = createSlice({
-  name: 'order',
+export const modalSlice = createSlice({
+  name: 'modal',
   initialState,
   reducers: {
     // increment: (state) => {
@@ -41,9 +47,21 @@ export const orderSlice = createSlice({
     // decrement: (state) => {
     //   state.value -= 1
     // },
-    // incrementByAmount: (state, action) => {
-    //   state.value += action.payload
-    // },
+    addCurrentItem: (state, action) => {
+      state.currentItem = action.payload
+    },
+    removeCurrentItem: (state) => {
+      state.currentItem = initialState.currentItem;
+    },
+    setModalType: (state, action ) => {
+      state.modalType = action.payload;
+    },
+    resetModalType: (state) => {
+      state.modalType = initialState.modalType;
+    },
+    toggleModalOpen: (state) => {
+      state.isModalOpen = !state.isModalOpen;
+    },
   },
   // extraReducers: (builder) => {
   //   builder.addCase(getIngredients.fulfilled, (state, action) => {
@@ -52,9 +70,9 @@ export const orderSlice = createSlice({
   // },
 })
 
-// export const { increment } = ingredientsSlice.actions
+export const { addCurrentItem, removeCurrentItem, setModalType, resetModalType, toggleModalOpen } = modalSlice.actions
 
 // selectors
-export const selectOrder = (state: { order: Order }) => state.order;
+export const selectModal = (state: { modal: Modal }) => state.modal;
 
-export default orderSlice.reducer
+export default modalSlice.reducer
