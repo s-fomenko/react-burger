@@ -2,28 +2,35 @@ import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
 import {BASE_API_URL} from "../../constants/api";
 import {Data} from "../../models/data";
 
-// export const getIngredients = createAsyncThunk(
-//   'ingredients/getIngredients',
-//   async () => {
-//     const apiUrl = `${BASE_API_URL}ingredients`;
-//     try {
-//       const res = await fetch(apiUrl);
-//       if (!res.ok) {
-//         throw new Error('Ответ сети был не ok.');
-//       }
-//       const response = await res.json();
-//       return response.data;
-//     } catch (e) {
-//       console.log(`Error: ${e}`)
-//     }
-//   }
-// );
+export const setOrderNumber = createAsyncThunk(
+  'modal/setOrderNumber',
+  async (ingredients: string[]) => {
+    const apiUrl = `${BASE_API_URL}orders`;
+    try {
+      const res = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({"ingredients": ingredients})
+      });
+      if (!res.ok) {
+        throw new Error('Ответ сети был не ok.');
+      }
+      const response = await res.json();
+      return response.data.order.number;
+    } catch (e) {
+      console.log(`Error: ${e}`)
+    }
+  }
+);
 
 type Modal = {
   currentItem: Data | null;
   orderIngredients: string[];
   modalType: string;
   isModalOpen: boolean;
+  orderNumber: number | null;
 };
 
 const initialState: Modal = {
@@ -31,22 +38,13 @@ const initialState: Modal = {
   orderIngredients: [],
   modalType: '',
   isModalOpen: false,
+  orderNumber: null,
 }
 
 export const modalSlice = createSlice({
   name: 'modal',
   initialState,
   reducers: {
-    // increment: (state) => {
-    //   // Redux Toolkit allows us to write "mutating" logic in reducers. It
-    //   // doesn't actually mutate the state because it uses the Immer library,
-    //   // which detects changes to a "draft state" and produces a brand new
-    //   // immutable state based off those changes
-    //   state.value += 1
-    // },
-    // decrement: (state) => {
-    //   state.value -= 1
-    // },
     addCurrentItem: (state, action) => {
       state.currentItem = action.payload
     },
@@ -62,15 +60,27 @@ export const modalSlice = createSlice({
     toggleModalOpen: (state) => {
       state.isModalOpen = !state.isModalOpen;
     },
+    resetOrderNumber: (state) => {
+      state.orderNumber = initialState.orderNumber;
+    },
   },
-  // extraReducers: (builder) => {
-  //   builder.addCase(getIngredients.fulfilled, (state, action) => {
-  //     state.items = action.payload;
-  //   })
-  // },
+  extraReducers: (builder) => {
+    builder.addCase(setOrderNumber.fulfilled, (state, action) => {
+      state.orderNumber = action.payload;
+      state.modalType = 'total';
+      state.isModalOpen = true;
+    })
+  },
 })
 
-export const { addCurrentItem, removeCurrentItem, setModalType, resetModalType, toggleModalOpen } = modalSlice.actions
+export const {
+  addCurrentItem,
+  removeCurrentItem,
+  setModalType,
+  resetModalType,
+  toggleModalOpen,
+  resetOrderNumber
+} = modalSlice.actions
 
 // selectors
 export const selectModal = (state: { modal: Modal }) => state.modal;

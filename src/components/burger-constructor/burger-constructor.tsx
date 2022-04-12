@@ -1,9 +1,8 @@
-import React, { Dispatch, SetStateAction, useMemo } from 'react';
-import { Button, ConstructorElement, CurrencyIcon, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components'
-import { BASE_API_URL } from '../../constants/api';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectConstructorItems } from '../../services/reducers/burger-constructor';
-import { setModalType, toggleModalOpen } from '../../services/reducers/modal';
+import React, {Dispatch, SetStateAction, useMemo} from 'react';
+import {Button, ConstructorElement, CurrencyIcon, DragIcon} from '@ya.praktikum/react-developer-burger-ui-components'
+import {useDispatch, useSelector} from 'react-redux';
+import {selectConstructorItems} from '../../services/reducers/burger-constructor';
+import {setOrderNumber} from '../../services/reducers/modal';
 import styles from './burger-constructor.module.css';
 
 type Props = {
@@ -23,26 +22,8 @@ const BurgerConstructor = ({ onOrderRequest }: Props) => {
   }, [burgerBun, burgerFilling]);
 
   const onButtonClick = async () => {
-    const apiUrl = `${BASE_API_URL}orders`;
     if (burgerBun && burgerFilling) {
-      try {
-        const res = await fetch(apiUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({"ingredients": [burgerBun._id, ...burgerFilling.map(item => item._id)]})
-        });
-        if (!res.ok) {
-          throw new Error('Ответ сети был не ok.');
-        }
-        const data = await res.json();
-        onOrderRequest(data.order.number);
-        dispatch(setModalType('total'));
-        dispatch(toggleModalOpen());
-      } catch (e) {
-        console.log(`Error: ${e}`)
-      }
+      dispatch(setOrderNumber([burgerBun._id, ...burgerFilling.map(item => item._id)]))
     }
   };
 

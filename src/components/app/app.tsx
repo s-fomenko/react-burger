@@ -8,7 +8,13 @@ import Modal from '../modal/modal';
 import { OrderContext } from '../../context/orderContext';
 import { useDispatch, useSelector } from 'react-redux';
 import { getIngredients } from '../../services/reducers/burger-ingredients';
-import { removeCurrentItem, resetModalType, selectModal, toggleModalOpen } from '../../services/reducers/modal';
+import {
+  removeCurrentItem,
+  resetModalType,
+  resetOrderNumber,
+  selectModal,
+  toggleModalOpen
+} from '../../services/reducers/modal';
 import styles from './app.module.css';
 
 const App = () => {
@@ -18,8 +24,8 @@ const App = () => {
 
   const onModalClose = () => {
     dispatch(toggleModalOpen());
-    dispatch(removeCurrentItem());
     dispatch(resetModalType());
+    modalType === 'ingredient' ? dispatch(removeCurrentItem()) : dispatch(resetOrderNumber());
   };
   const onKeyDown = useCallback((e: any) => {
     if (isModalOpen && e.key === 'Escape') {

@@ -1,23 +1,5 @@
-import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
-import {BASE_API_URL} from "../../constants/api";
+import {createSlice} from '@reduxjs/toolkit'
 import {Data} from "../../models/data";
-
-// export const getIngredients = createAsyncThunk(
-//   'ingredients/getIngredients',
-//   async () => {
-//     const apiUrl = `${BASE_API_URL}ingredients`;
-//     try {
-//       const res = await fetch(apiUrl);
-//       if (!res.ok) {
-//         throw new Error('Ответ сети был не ok.');
-//       }
-//       const response = await res.json();
-//       return response.data;
-//     } catch (e) {
-//       console.log(`Error: ${e}`)
-//     }
-//   }
-// );
 
 type Constructor = {
   burgerBun: Data | null;
@@ -40,18 +22,7 @@ export const constructorSlice = createSlice({
     //   // immutable state based off those changes
     //   state.value += 1
     // },
-    // decrement: (state) => {
-    //   state.value -= 1
-    // },
-    // incrementByAmount: (state, action) => {
-    //   state.value += action.payload
-    // },
   },
-  // extraReducers: (builder) => {
-  //   builder.addCase(getIngredients.fulfilled, (state, action) => {
-  //     state.items = action.payload;
-  //   })
-  // },
 })
 
 // export const { increment } = ingredientsSlice.actions

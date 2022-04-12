@@ -38,12 +38,6 @@ export const ingredientsSlice = createSlice({
     //   // immutable state based off those changes
     //   state.value += 1
     // },
-    // decrement: (state) => {
-    //   state.value -= 1
-    // },
-    // incrementByAmount: (state, action) => {
-    //   state.value += action.payload
-    // },
   },
   extraReducers: (builder) => {
     builder.addCase(getIngredients.fulfilled, (state, action) => {
