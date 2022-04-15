@@ -1,17 +1,25 @@
-import React, {useState} from 'react';
-import { CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components'
-import { Data } from '../../models/data';
+import React from 'react';
+import {Counter, CurrencyIcon} from '@ya.praktikum/react-developer-burger-ui-components'
+import {Data} from '../../models/data';
 import styles from './burger-ingredients-item.module.css';
-import { useDispatch } from 'react-redux';
-import { addCurrentItem, setModalType, toggleModalOpen } from '../../services/reducers/modal';
+import {useDispatch} from 'react-redux';
+import {addCurrentItem, setModalType, toggleModalOpen} from '../../services/reducers/modal';
+import {useDrag} from "react-dnd";
 
 type Props = {
   ingredient: Data;
 };
 
 const BurgerIngredientsItem = ({ ingredient }: Props) => {
-  const [count, setCount] = useState(0);
   const dispatch = useDispatch();
+
+  const [{ opacity }, dragRef] = useDrag({
+    type: 'ingredient',
+    item: {...ingredient},
+    collect: monitor => ({
+      opacity: monitor.isDragging() ? 0.5 : 1
+    })
+  });
 
   const chooseCurrent = () => {
     dispatch(addCurrentItem(ingredient));
@@ -20,7 +28,7 @@ const BurgerIngredientsItem = ({ ingredient }: Props) => {
   };
 
   return (
-    <section className={styles.wrapper} onClick={chooseCurrent}>
+    <section className={styles.wrapper} onClick={chooseCurrent} ref={dragRef} style={{opacity}}>
       <div className={`${styles.imageWrapper} pl-4 pr-4`}>
         <img className={styles.image} src={ingredient.image} alt={ingredient.name}/>
       </div>
@@ -29,9 +37,9 @@ const BurgerIngredientsItem = ({ ingredient }: Props) => {
         <CurrencyIcon type="primary"/>
       </div>
       <p className={`${styles.name} text text_type_main-default`}>{ingredient.name}</p>
-      {count > 0 &&
+      {ingredient.count && ingredient.count > 0 &&
         (<div className={styles.counterWrapper}>
-          <Counter count={count} size="default"/>
+          <Counter count={ingredient.count} size="default"/>
         </div>)}
     </section>
   );

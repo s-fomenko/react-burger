@@ -1,10 +1,11 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import icon from '../../images/done.svg'
+import {useSelector} from "react-redux";
+import {selectModal} from "../../services/reducers/modal";
 import styles from "./order-details.module.css";
-import {OrderContext} from "../../context/orderContext";
 
 const OrderDetails = () => {
-  const orderNumber = useContext(OrderContext)
+  const { orderNumber } = useSelector(selectModal)
 
   return (
     <div className={styles.container}>

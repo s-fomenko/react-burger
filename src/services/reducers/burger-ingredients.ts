@@ -31,22 +31,22 @@ export const ingredientsSlice = createSlice({
   name: 'burgerIngredients',
   initialState,
   reducers: {
-    // increment: (state) => {
-    //   // Redux Toolkit allows us to write "mutating" logic in reducers. It
-    //   // doesn't actually mutate the state because it uses the Immer library,
-    //   // which detects changes to a "draft state" and produces a brand new
-    //   // immutable state based off those changes
-    //   state.value += 1
-    // },
+    increaseCount: (state, action) => {
+      state.items.map(item => item._id === action.payload._id ? {...item, count: item.count += 1} : item);
+    },
+    decreaseCount: (state, action) => {
+      state.items.map(item => item._id === action.payload._id ? {...item, count: item.count -= 1} : item);
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getIngredients.fulfilled, (state, action) => {
+      action.payload.map((item: Data) => item.count = 0)
       state.items = action.payload;
     })
   },
 })
 
-// export const { increment } = ingredientsSlice.actions
+export const { increaseCount, decreaseCount } = ingredientsSlice.actions
 
 // selectors
 export const selectIngredients = (state: { burgerIngredients: Ingredients }) => state.burgerIngredients.items;

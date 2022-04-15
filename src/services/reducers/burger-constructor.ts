@@ -15,17 +15,19 @@ export const constructorSlice = createSlice({
   name: 'burgerConstructor',
   initialState,
   reducers: {
-    // increment: (state) => {
-    //   // Redux Toolkit allows us to write "mutating" logic in reducers. It
-    //   // doesn't actually mutate the state because it uses the Immer library,
-    //   // which detects changes to a "draft state" and produces a brand new
-    //   // immutable state based off those changes
-    //   state.value += 1
-    // },
+    addBun: (state, action ) => {
+      state.burgerBun = action.payload;
+    },
+    addFilling: (state, action ) => {
+      state.burgerFilling.push(action.payload);
+    },
+    removeFilling: (state, action) => {
+      state.burgerFilling = state.burgerFilling.filter(item => item.uuid !== action.payload.uuid);
+    }
   },
 })
 
-// export const { increment } = ingredientsSlice.actions
+export const { addBun, addFilling, removeFilling } = constructorSlice.actions
 
 // selectors
 export const selectConstructorItems = (state: { burgerConstructor: Constructor }) => state.burgerConstructor;

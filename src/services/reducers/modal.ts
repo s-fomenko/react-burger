@@ -18,7 +18,7 @@ export const setOrderNumber = createAsyncThunk(
         throw new Error('Ответ сети был не ok.');
       }
       const response = await res.json();
-      return response.data.order.number;
+      return response.order.number;
     } catch (e) {
       console.log(`Error: ${e}`)
     }

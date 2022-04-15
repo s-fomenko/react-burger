@@ -1,17 +1,33 @@
-import React, {Dispatch, SetStateAction, useMemo} from 'react';
+import React, {useMemo} from 'react';
 import {Button, ConstructorElement, CurrencyIcon, DragIcon} from '@ya.praktikum/react-developer-burger-ui-components'
 import {useDispatch, useSelector} from 'react-redux';
-import {selectConstructorItems} from '../../services/reducers/burger-constructor';
+import {addBun, addFilling, removeFilling, selectConstructorItems} from '../../services/reducers/burger-constructor';
 import {setOrderNumber} from '../../services/reducers/modal';
 import styles from './burger-constructor.module.css';
+import {useDrop} from 'react-dnd';
+import {v4 as uuidv4} from 'uuid';
+import {Data} from "../../models/data";
+import {decreaseCount, increaseCount} from "../../services/reducers/burger-ingredients";
 
-type Props = {
-  onOrderRequest: Dispatch<SetStateAction<number | null>>;
-}
-
-const BurgerConstructor = ({ onOrderRequest }: Props) => {
+const BurgerConstructor = () => {
   const { burgerBun, burgerFilling } = useSelector(selectConstructorItems);
   const dispatch = useDispatch();
+
+  const [{ isHover }, dropTargetRef] = useDrop({
+    accept: 'ingredient',
+    collect: monitor => ({
+      isHover: monitor.isOver()
+    }),
+    drop: (item: Data)  => {
+      item.uuid = uuidv4();
+      if (item.type === 'bun') {
+        dispatch(addBun(item));
+      } else  {
+        dispatch(addFilling(item));
+        dispatch(increaseCount(item));
+      }
+    }
+  });
 
   const totalPrice = useMemo(() => {
     const bunPrice = burgerBun ? burgerBun.price * 2 : 0;
@@ -27,8 +43,14 @@ const BurgerConstructor = ({ onOrderRequest }: Props) => {
     }
   };
 
+  const removeIngredient = (item: Data) => {
+    dispatch(removeFilling(item));
+    dispatch(decreaseCount(item));
+
+  }
+
   return (
-    <section className={`${styles.container} pt-25`}>
+    <section className={`${styles.container} ${isHover ? styles.onHover : ''} pt-25`} ref={dropTargetRef}>
       {burgerBun && <div className={styles.blockedElement}>
         <ConstructorElement
           type='top'
@@ -40,13 +62,14 @@ const BurgerConstructor = ({ onOrderRequest }: Props) => {
       </div>}
       <div className={`${styles.scrollContainer} pt-4 pb-4`}>
         <ul className={styles.list}>
-          {burgerFilling.map((item, index) => (
-            <li key={index} className={`${styles.item} mb-4`}>
+          {burgerFilling.map((item) => (
+            <li key={item.uuid} className={`${styles.item} mb-4`}>
               <DragIcon type="primary" />
               <ConstructorElement
                 text={item.name}
                 thumbnail={item.image}
                 price={item.price}
+                handleClose={() => removeIngredient(item)}
               />
             </li>
           ))}
