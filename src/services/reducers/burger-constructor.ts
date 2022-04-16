@@ -23,11 +23,14 @@ export const constructorSlice = createSlice({
     },
     removeFilling: (state, action) => {
       state.burgerFilling = state.burgerFilling.filter(item => item.uuid !== action.payload.uuid);
+    },
+    updateFillings: (state, action) => {
+      state.burgerFilling = action.payload;
     }
   },
 })
 
-export const { addBun, addFilling, removeFilling } = constructorSlice.actions
+export const { addBun, addFilling, removeFilling, updateFillings } = constructorSlice.actions
 
 // selectors
 export const selectConstructorItems = (state: { burgerConstructor: Constructor }) => state.burgerConstructor;
