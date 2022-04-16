@@ -37,10 +37,10 @@ const BurgerIngredientsItem = ({ ingredient }: Props) => {
         <CurrencyIcon type="primary"/>
       </div>
       <p className={`${styles.name} text text_type_main-default`}>{ingredient.name}</p>
-      {ingredient.count && ingredient.count > 0 &&
+      {ingredient.count > 0 ?
         (<div className={styles.counterWrapper}>
           <Counter count={ingredient.count} size="default"/>
-        </div>)}
+        </div>) : null}
     </section>
   );
 };
