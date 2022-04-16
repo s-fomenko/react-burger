@@ -1,13 +1,14 @@
 import React, {useMemo} from 'react';
-import {Button, ConstructorElement, CurrencyIcon, DragIcon} from '@ya.praktikum/react-developer-burger-ui-components'
+import {Button, ConstructorElement, CurrencyIcon} from '@ya.praktikum/react-developer-burger-ui-components'
 import {useDispatch, useSelector} from 'react-redux';
-import {addBun, addFilling, removeFilling, selectConstructorItems} from '../../services/reducers/burger-constructor';
+import {addBun, addFilling, selectConstructorItems} from '../../services/reducers/burger-constructor';
 import {setOrderNumber} from '../../services/reducers/modal';
 import styles from './burger-constructor.module.css';
 import {useDrop} from 'react-dnd';
 import {v4 as uuidv4} from 'uuid';
 import {Data} from "../../models/data";
-import {decreaseCount, increaseCount} from "../../services/reducers/burger-ingredients";
+import {increaseCount} from "../../services/reducers/burger-ingredients";
+import BurgerConstructorItem from "../burger-constructor-item/burger-constructor-item";
 
 const BurgerConstructor = () => {
   const { burgerBun, burgerFilling } = useSelector(selectConstructorItems);
@@ -43,12 +44,6 @@ const BurgerConstructor = () => {
     }
   };
 
-  const removeIngredient = (item: Data) => {
-    dispatch(removeFilling(item));
-    dispatch(decreaseCount(item));
-
-  }
-
   return (
     <section className={`${styles.container} ${isHover ? styles.onHover : ''} pt-25`} ref={dropTargetRef}>
       {burgerBun && <div className={styles.blockedElement}>
@@ -61,19 +56,11 @@ const BurgerConstructor = () => {
         />
       </div>}
       <div className={`${styles.scrollContainer} pt-4 pb-4`}>
-        <ul className={styles.list}>
+        <div className={styles.list}>
           {burgerFilling.map((item) => (
-            <li key={item.uuid} className={`${styles.item} mb-4`}>
-              <DragIcon type="primary" />
-              <ConstructorElement
-                text={item.name}
-                thumbnail={item.image}
-                price={item.price}
-                handleClose={() => removeIngredient(item)}
-              />
-            </li>
+            <BurgerConstructorItem key={item.uuid} item={item} />
           ))}
-        </ul>
+        </div>
       </div>
       {burgerBun && <div className={styles.blockedElement}>
         <ConstructorElement

@@ -19,13 +19,6 @@
   list-style: none;
 }
 
-.item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 8px;
-}
-
 .orderWrapper {
   display: flex;
   justify-content: flex-end;

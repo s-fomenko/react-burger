@@ -1,10 +1,10 @@
 import React from 'react';
 import {Counter, CurrencyIcon} from '@ya.praktikum/react-developer-burger-ui-components'
 import {Data} from '../../models/data';
-import styles from './burger-ingredients-item.module.css';
 import {useDispatch} from 'react-redux';
 import {addCurrentItem, setModalType, toggleModalOpen} from '../../services/reducers/modal';
 import {useDrag} from "react-dnd";
+import styles from './burger-ingredients-item.module.css';
 
 type Props = {
   ingredient: Data;
