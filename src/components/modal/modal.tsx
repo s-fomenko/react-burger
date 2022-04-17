@@ -1,12 +1,10 @@
-import React, { useCallback, useEffect } from 'react';
+import React, {useCallback, useEffect} from 'react';
 import ReactDOM from "react-dom";
-import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components'
+import {CloseIcon} from '@ya.praktikum/react-developer-burger-ui-components'
 import ModalOverlay from "../modal-overlay/modal-overlay";
-import {removeCurrentItem, resetOrderNumber, selectModal} from "../../services/reducers/modal";
-import { useDispatch, useSelector } from "react-redux";
+import {selectModal} from "../../services/reducers/modal";
+import {useDispatch, useSelector} from "react-redux";
 import styles from './modal.module.css';
-import {resetConstructor} from "../../services/reducers/burger-constructor";
-import {resetCounts} from "../../services/reducers/burger-ingredients";
 
 type Props = {
   children: React.ReactNode;
@@ -21,16 +19,8 @@ const Modal = ({ children, onClose, header }: Props) => {
   const dispatch = useDispatch();
 
   const onKeyDown = useCallback((e: any) => {
-    if ((currentItem || orderNumber) && e.key === 'Escape') {
-      if (currentItem) {
-        dispatch(removeCurrentItem());
-      }
-
-      if (orderNumber) {
-        dispatch(resetOrderNumber());
-        dispatch(resetConstructor());
-        dispatch(resetCounts());
-      }
+    if (e.key === 'Escape') {
+      onClose();
     }
   }, [dispatch, currentItem, orderNumber]);
 
