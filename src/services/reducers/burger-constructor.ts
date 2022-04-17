@@ -26,11 +26,15 @@ export const constructorSlice = createSlice({
     },
     updateFillings: (state, action) => {
       state.burgerFilling = action.payload;
+    },
+    resetConstructor: state => {
+      state.burgerBun = initialState.burgerBun;
+      state.burgerFilling = initialState.burgerFilling;
     }
   },
 })
 
-export const { addBun, addFilling, removeFilling, updateFillings } = constructorSlice.actions
+export const { addBun, addFilling, removeFilling, updateFillings, resetConstructor } = constructorSlice.actions
 
 // selectors
 export const selectConstructorItems = (state: { burgerConstructor: Constructor }) => state.burgerConstructor;

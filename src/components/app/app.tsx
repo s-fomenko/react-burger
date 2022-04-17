@@ -6,19 +6,27 @@ import IngredientDetails from '../ingredient-details/ingredient-details';
 import OrderDetails from '../order-details/order-details';
 import Modal from '../modal/modal';
 import {useDispatch, useSelector} from 'react-redux';
-import {getIngredients} from '../../services/reducers/burger-ingredients';
+import {getIngredients, resetCounts} from '../../services/reducers/burger-ingredients';
 import {removeCurrentItem, resetOrderNumber, selectModal} from '../../services/reducers/modal';
 import {DndProvider} from 'react-dnd';
 import {HTML5Backend} from 'react-dnd-html5-backend';
 import styles from './app.module.css';
+import {resetConstructor} from "../../services/reducers/burger-constructor";
 
 const App = () => {
   const { currentItem, orderNumber } = useSelector(selectModal);
   const dispatch = useDispatch();
 
   const onModalClose = () => {
-    dispatch(removeCurrentItem());
-    dispatch(resetOrderNumber());
+    if (currentItem) {
+      dispatch(removeCurrentItem());
+    }
+
+    if (orderNumber) {
+      dispatch(resetOrderNumber());
+      dispatch(resetConstructor());
+      dispatch(resetCounts());
+    }
   };
 
   useEffect(() => {

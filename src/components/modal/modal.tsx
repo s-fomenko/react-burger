@@ -5,6 +5,8 @@ import ModalOverlay from "../modal-overlay/modal-overlay";
 import {removeCurrentItem, resetOrderNumber, selectModal} from "../../services/reducers/modal";
 import { useDispatch, useSelector } from "react-redux";
 import styles from './modal.module.css';
+import {resetConstructor} from "../../services/reducers/burger-constructor";
+import {resetCounts} from "../../services/reducers/burger-ingredients";
 
 type Props = {
   children: React.ReactNode;
@@ -20,8 +22,15 @@ const Modal = ({ children, onClose, header }: Props) => {
 
   const onKeyDown = useCallback((e: any) => {
     if ((currentItem || orderNumber) && e.key === 'Escape') {
-      dispatch(removeCurrentItem());
-      dispatch(resetOrderNumber());
+      if (currentItem) {
+        dispatch(removeCurrentItem());
+      }
+
+      if (orderNumber) {
+        dispatch(resetOrderNumber());
+        dispatch(resetConstructor());
+        dispatch(resetCounts());
+      }
     }
   }, [dispatch, currentItem, orderNumber]);
 

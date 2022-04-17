@@ -42,6 +42,9 @@ export const ingredientsSlice = createSlice({
         {...item, count: item.count === 0 ? item.count += 2 : item.count} :
         {...item, count: item.count === 2 ? item.count -= 2 : item.count});
     },
+    resetCounts: state => {
+      state.items.map(item => ({...item, count: item.count = 0}))
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(getIngredients.fulfilled, (state, action) => {
@@ -54,7 +57,7 @@ export const ingredientsSlice = createSlice({
   },
 })
 
-export const { increaseCount, decreaseCount, updateBunCount } = ingredientsSlice.actions
+export const { increaseCount, decreaseCount, updateBunCount, resetCounts } = ingredientsSlice.actions
 
 // selectors
 export const selectIngredients = (state: { burgerIngredients: Ingredients }) => state.burgerIngredients.items;
