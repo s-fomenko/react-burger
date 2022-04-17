@@ -7,25 +7,18 @@ import OrderDetails from '../order-details/order-details';
 import Modal from '../modal/modal';
 import {useDispatch, useSelector} from 'react-redux';
 import {getIngredients} from '../../services/reducers/burger-ingredients';
-import {
-  removeCurrentItem,
-  resetModalType,
-  resetOrderNumber,
-  selectModal,
-  toggleModalOpen
-} from '../../services/reducers/modal';
+import {removeCurrentItem, resetOrderNumber, selectModal} from '../../services/reducers/modal';
 import {DndProvider} from 'react-dnd';
 import {HTML5Backend} from 'react-dnd-html5-backend';
 import styles from './app.module.css';
 
 const App = () => {
-  const { currentItem, modalType, isModalOpen } = useSelector(selectModal);
+  const { currentItem, orderNumber } = useSelector(selectModal);
   const dispatch = useDispatch();
 
   const onModalClose = () => {
-    dispatch(toggleModalOpen());
-    dispatch(resetModalType());
-    modalType === 'ingredient' ? dispatch(removeCurrentItem()) : dispatch(resetOrderNumber());
+    dispatch(removeCurrentItem());
+    dispatch(resetOrderNumber());
   };
 
   useEffect(() => {
@@ -41,12 +34,12 @@ const App = () => {
           <BurgerConstructor />
         </DndProvider>
       </main>
-      {isModalOpen && modalType === 'ingredient' && (
+      {currentItem && (
         <Modal onClose={onModalClose} header='Детали ингредиента'>
           <IngredientDetails ingredient={currentItem} />
         </Modal>
       )}
-      {isModalOpen && modalType === 'total' && (
+      {orderNumber && (
         <Modal onClose={onModalClose}>
           <OrderDetails />
         </Modal>

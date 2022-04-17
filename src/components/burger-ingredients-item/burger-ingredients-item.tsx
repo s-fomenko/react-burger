@@ -2,7 +2,7 @@ import React from 'react';
 import {Counter, CurrencyIcon} from '@ya.praktikum/react-developer-burger-ui-components'
 import {Data} from '../../models/data';
 import {useDispatch} from 'react-redux';
-import {addCurrentItem, setModalType, toggleModalOpen} from '../../services/reducers/modal';
+import {addCurrentItem} from '../../services/reducers/modal';
 import {useDrag} from "react-dnd";
 import styles from './burger-ingredients-item.module.css';
 
@@ -23,8 +23,6 @@ const BurgerIngredientsItem = ({ ingredient }: Props) => {
 
   const chooseCurrent = () => {
     dispatch(addCurrentItem(ingredient));
-    dispatch(setModalType('ingredient'));
-    dispatch(toggleModalOpen());
   };
 
   return (

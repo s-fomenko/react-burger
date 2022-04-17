@@ -27,15 +27,11 @@ export const setOrderNumber = createAsyncThunk(
 
 type Modal = {
   currentItem: Data | null;
-  modalType: string;
-  isModalOpen: boolean;
   orderNumber: number | null;
 };
 
 const initialState: Modal = {
   currentItem: null,
-  modalType: '',
-  isModalOpen: false,
   orderNumber: null,
 }
 
@@ -49,15 +45,6 @@ export const modalSlice = createSlice({
     removeCurrentItem: (state) => {
       state.currentItem = initialState.currentItem;
     },
-    setModalType: (state, action ) => {
-      state.modalType = action.payload;
-    },
-    resetModalType: (state) => {
-      state.modalType = initialState.modalType;
-    },
-    toggleModalOpen: (state) => {
-      state.isModalOpen = !state.isModalOpen;
-    },
     resetOrderNumber: (state) => {
       state.orderNumber = initialState.orderNumber;
     },
@@ -65,13 +52,9 @@ export const modalSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(setOrderNumber.fulfilled, (state, action) => {
       state.orderNumber = action.payload;
-      state.modalType = 'total';
-      state.isModalOpen = true;
     })
     builder.addCase(setOrderNumber.rejected, state => {
       state.orderNumber = initialState.orderNumber;
-      state.modalType = initialState.modalType;
-      state.isModalOpen = initialState.isModalOpen;
     })
   },
 })
@@ -79,9 +62,6 @@ export const modalSlice = createSlice({
 export const {
   addCurrentItem,
   removeCurrentItem,
-  setModalType,
-  resetModalType,
-  toggleModalOpen,
   resetOrderNumber
 } = modalSlice.actions
 

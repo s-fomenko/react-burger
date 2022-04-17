@@ -2,7 +2,7 @@ import React, { useCallback, useEffect } from 'react';
 import ReactDOM from "react-dom";
 import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components'
 import ModalOverlay from "../modal-overlay/modal-overlay";
-import { selectModal, toggleModalOpen } from "../../services/reducers/modal";
+import {removeCurrentItem, resetOrderNumber, selectModal} from "../../services/reducers/modal";
 import { useDispatch, useSelector } from "react-redux";
 import styles from './modal.module.css';
 
@@ -15,14 +15,15 @@ type Props = {
 const modalRoot = document.getElementById("react-modals") as HTMLElement;
 
 const Modal = ({ children, onClose, header }: Props) => {
-  const { isModalOpen } = useSelector(selectModal)
+  const { currentItem, orderNumber } = useSelector(selectModal)
   const dispatch = useDispatch();
 
   const onKeyDown = useCallback((e: any) => {
-    if (isModalOpen && e.key === 'Escape') {
-      dispatch(toggleModalOpen());
+    if ((currentItem || orderNumber) && e.key === 'Escape') {
+      dispatch(removeCurrentItem());
+      dispatch(resetOrderNumber());
     }
-  }, [isModalOpen, dispatch]);
+  }, [dispatch, currentItem, orderNumber]);
 
   useEffect(() => {
     document.addEventListener('keydown', onKeyDown);
@@ -30,7 +31,7 @@ const Modal = ({ children, onClose, header }: Props) => {
     return () => {
       document.removeEventListener('keydown', onKeyDown);
     }
-  }, [isModalOpen, onKeyDown])
+  }, [onKeyDown])
 
   return ReactDOM.createPortal(
     <>
