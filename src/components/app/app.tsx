@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import AppHeader from '../app-header/app-header';
 import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
@@ -27,19 +27,6 @@ const App = () => {
     dispatch(resetModalType());
     modalType === 'ingredient' ? dispatch(removeCurrentItem()) : dispatch(resetOrderNumber());
   };
-  const onKeyDown = useCallback((e: any) => {
-    if (isModalOpen && e.key === 'Escape') {
-      dispatch(toggleModalOpen());
-    }
-  }, [isModalOpen, dispatch]);
-
-  useEffect(() => {
-    document.addEventListener('keydown', onKeyDown);
-
-    return () => {
-      document.removeEventListener('keydown', onKeyDown);
-    }
-  }, [isModalOpen, onKeyDown])
 
   useEffect(() => {
     dispatch(getIngredients());

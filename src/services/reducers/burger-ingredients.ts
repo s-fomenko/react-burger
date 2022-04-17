@@ -37,16 +37,24 @@ export const ingredientsSlice = createSlice({
     decreaseCount: (state, action) => {
       state.items.map(item => item._id === action.payload._id ? {...item, count: item.count -= 1} : item);
     },
+    updateBunCount: (state, action) => {
+      state.items.map(item => item._id === action.payload._id ?
+        {...item, count: item.count === 0 ? item.count += 2 : item.count} :
+        {...item, count: item.count === 2 ? item.count -= 2 : item.count});
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getIngredients.fulfilled, (state, action) => {
       action.payload.map((item: Data) => item.count = 0)
       state.items = action.payload;
     })
+    builder.addCase(getIngredients.rejected, state => {
+      state.items = initialState.items;
+    })
   },
 })
 
-export const { increaseCount, decreaseCount } = ingredientsSlice.actions
+export const { increaseCount, decreaseCount, updateBunCount } = ingredientsSlice.actions
 
 // selectors
 export const selectIngredients = (state: { burgerIngredients: Ingredients }) => state.burgerIngredients.items;

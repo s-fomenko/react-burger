@@ -27,7 +27,6 @@ export const setOrderNumber = createAsyncThunk(
 
 type Modal = {
   currentItem: Data | null;
-  orderIngredients: string[];
   modalType: string;
   isModalOpen: boolean;
   orderNumber: number | null;
@@ -35,7 +34,6 @@ type Modal = {
 
 const initialState: Modal = {
   currentItem: null,
-  orderIngredients: [],
   modalType: '',
   isModalOpen: false,
   orderNumber: null,
@@ -69,6 +67,11 @@ export const modalSlice = createSlice({
       state.orderNumber = action.payload;
       state.modalType = 'total';
       state.isModalOpen = true;
+    })
+    builder.addCase(setOrderNumber.rejected, state => {
+      state.orderNumber = initialState.orderNumber;
+      state.modalType = initialState.modalType;
+      state.isModalOpen = initialState.isModalOpen;
     })
   },
 })

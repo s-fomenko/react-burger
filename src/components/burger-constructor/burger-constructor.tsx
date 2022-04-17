@@ -6,7 +6,7 @@ import {setOrderNumber} from '../../services/reducers/modal';
 import {useDrop} from 'react-dnd';
 import {v4 as uuidv4} from 'uuid';
 import {Data} from "../../models/data";
-import {increaseCount} from "../../services/reducers/burger-ingredients";
+import {increaseCount, updateBunCount} from "../../services/reducers/burger-ingredients";
 import BurgerConstructorItem from "../burger-constructor-item/burger-constructor-item";
 import update from 'immutability-helper';
 import styles from './burger-constructor.module.css';
@@ -24,6 +24,7 @@ const BurgerConstructor = () => {
       item.uuid = uuidv4();
       if (item.type === 'bun') {
         dispatch(addBun(item));
+        dispatch(updateBunCount(item));
       } else  {
         dispatch(addFilling(item));
         dispatch(increaseCount(item));
