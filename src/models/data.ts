@@ -11,4 +11,6 @@ export type Data = {
   image_mobile: string;
   image_large: string;
   __v: number;
+  uuid?: string;
+  count: number;
 };

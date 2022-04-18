@@ -1,89 +1,58 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import AppHeader from '../app-header/app-header';
 import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
 import IngredientDetails from '../ingredient-details/ingredient-details';
 import OrderDetails from '../order-details/order-details';
 import Modal from '../modal/modal';
-import {Data} from '../../models/data';
-import {IngredientsContext} from '../../context/ingriedientsContext';
-import {OrderContext} from "../../context/orderContext";
-import {BASE_API_URL} from "../../constants/api";
-import styles from "./app.module.css";
+import {useDispatch, useSelector} from 'react-redux';
+import {getIngredients, resetCounts} from '../../services/reducers/burger-ingredients';
+import {removeCurrentItem, resetOrderNumber, selectModal} from '../../services/reducers/modal';
+import {DndProvider} from 'react-dnd';
+import {HTML5Backend} from 'react-dnd-html5-backend';
+import styles from './app.module.css';
+import {resetConstructor} from "../../services/reducers/burger-constructor";
 
 const App = () => {
+  const { currentItem, orderNumber } = useSelector(selectModal);
+  const dispatch = useDispatch();
 
-  const [ingredients, setIngredients] = useState([]);
-  const [orderNumber, setOrderNumber] = useState<number | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalType, setModalType] = useState('');
-  const [currentIngredient, setCurrentIngredient] = useState<Data | null>(null);
-
-  const onModalOpen = (ingredient: Data | null, modalType: string) => {
-    setCurrentIngredient(ingredient);
-    setModalType(modalType);
-    setIsModalOpen(true)
-  };
   const onModalClose = () => {
-    setIsModalOpen(false);
-    setCurrentIngredient(null);
-    setModalType('');
+    if (currentItem) {
+      dispatch(removeCurrentItem());
+    }
+
+    if (orderNumber) {
+      dispatch(resetOrderNumber());
+      dispatch(resetConstructor());
+      dispatch(resetCounts());
+    }
   };
-  const onKeyDown = (e: any) => {
-    if (isModalOpen && e.key === 'Escape') {
-      setIsModalOpen(false);
-    }
-  }
 
   useEffect(() => {
-    document.addEventListener('keydown', onKeyDown);
-
-    return () => {
-      document.removeEventListener('keydown', onKeyDown);
-    }
-  }, [isModalOpen])
-
-  useEffect(() => {
-    const apiUrl = `${BASE_API_URL}ingredients`;
-
-    const getIngredients = async () => {
-      try {
-        const res = await fetch(apiUrl);
-        if (!res.ok) {
-          throw new Error('Ответ сети был не ok.');
-        }
-        const data = await res.json();
-        setIngredients(data.data);
-      } catch (e) {
-        console.log(`Error: ${e}`)
-      }
-    }
-
-    getIngredients();
-  }, [])
+    dispatch(getIngredients());
+  }, [dispatch])
 
   return (
-    <IngredientsContext.Provider value={ingredients}>
-      <OrderContext.Provider value={orderNumber}>
-        <div className={styles.app}>
-          <AppHeader/>
-          <main className={`${styles.main} pl-5 pr-5`}>
-            <BurgerIngredients chooseCurrent={onModalOpen} />
-            <BurgerConstructor showTotal={onModalOpen} onOrderRequest={setOrderNumber} />
-          </main>
-          {isModalOpen && modalType === 'ingredient' && (
-            <Modal onClose={onModalClose} header='Детали ингредиента'>
-              <IngredientDetails ingredient={currentIngredient} />
-            </Modal>
-          )}
-          {isModalOpen && modalType === 'total' && (
-            <Modal onClose={onModalClose}>
-              <OrderDetails />
-            </Modal>
-          )}
-        </div>
-      </OrderContext.Provider>
-    </IngredientsContext.Provider>
+    <div className={styles.app}>
+      <AppHeader/>
+      <main className={`${styles.main} pl-5 pr-5`}>
+        <DndProvider backend={HTML5Backend}>
+          <BurgerIngredients />
+          <BurgerConstructor />
+        </DndProvider>
+      </main>
+      {currentItem && (
+        <Modal onClose={onModalClose} header='Детали ингредиента'>
+          <IngredientDetails ingredient={currentItem} />
+        </Modal>
+      )}
+      {orderNumber && (
+        <Modal onClose={onModalClose}>
+          <OrderDetails />
+        </Modal>
+      )}
+    </div>
   );
 };
 

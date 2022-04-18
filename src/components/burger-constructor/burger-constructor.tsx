@@ -1,26 +1,36 @@
-import React, {Dispatch, SetStateAction, useContext, useEffect, useMemo, useState} from 'react';
-import { ConstructorElement, DragIcon, Button, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components'
-import {Data} from '../../models/data';
-import {IngredientsContext} from "../../context/ingriedientsContext";
-import {BASE_API_URL} from "../../constants/api";
+import React, {useCallback, useMemo} from 'react';
+import {Button, ConstructorElement, CurrencyIcon} from '@ya.praktikum/react-developer-burger-ui-components'
+import {useDispatch, useSelector} from 'react-redux';
+import {addBun, addFilling, selectConstructorItems, updateFillings} from '../../services/reducers/burger-constructor';
+import {setOrderNumber} from '../../services/reducers/modal';
+import {useDrop} from 'react-dnd';
+import {v4 as uuidv4} from 'uuid';
+import {Data} from "../../models/data";
+import {increaseCount, updateBunCount} from "../../services/reducers/burger-ingredients";
+import BurgerConstructorItem from "../burger-constructor-item/burger-constructor-item";
+import update from 'immutability-helper';
 import styles from './burger-constructor.module.css';
 
-type Props = {
-  showTotal: (ingredient: Data | null, modalType: string) => void;
-  onOrderRequest: Dispatch<SetStateAction<number | null>>;
-}
+const BurgerConstructor = () => {
+  const { burgerBun, burgerFilling } = useSelector(selectConstructorItems);
+  const dispatch = useDispatch();
 
-const BurgerConstructor = ({ showTotal, onOrderRequest }: Props) => {
-  const ingredients: Data[] = useContext(IngredientsContext);
-  const [burgerBun, setBurgerBun] = useState<Data | null>(null);
-  const [burgerFilling, setBurgerFilling] = useState<Data[]>([]);
-
-  useEffect(() => {
-    if (ingredients.length) {
-      setBurgerBun(ingredients[0]);
-      setBurgerFilling(ingredients.filter(item => item.type !== 'bun'));
+  const [{ isHover }, dropTargetRef] = useDrop({
+    accept: 'ingredient',
+    collect: monitor => ({
+      isHover: monitor.isOver()
+    }),
+    drop: (item: Data)  => {
+      item.uuid = uuidv4();
+      if (item.type === 'bun') {
+        dispatch(addBun(item));
+        dispatch(updateBunCount(item));
+      } else  {
+        dispatch(addFilling(item));
+        dispatch(increaseCount(item));
+      }
     }
-  }, [ingredients])
+  });
 
   const totalPrice = useMemo(() => {
     const bunPrice = burgerBun ? burgerBun.price * 2 : 0;
@@ -31,30 +41,40 @@ const BurgerConstructor = ({ showTotal, onOrderRequest }: Props) => {
   }, [burgerBun, burgerFilling]);
 
   const onButtonClick = async () => {
-    const apiUrl = `${BASE_API_URL}orders`;
     if (burgerBun && burgerFilling) {
-      try {
-        const res = await fetch(apiUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({"ingredients": [burgerBun._id, ...burgerFilling.map(item => item._id)]})
-        });
-        if (!res.ok) {
-          throw new Error('Ответ сети был не ok.');
-        }
-        const data = await res.json();
-        onOrderRequest(data.order.number);
-        showTotal(null, 'total');
-      } catch (e) {
-        console.log(`Error: ${e}`)
-      }
+      dispatch(setOrderNumber([burgerBun._id, ...burgerFilling.map(item => item._id)]))
     }
   };
 
+  const findCard = useCallback(
+    (id: string | undefined) => {
+      const constructorItem = burgerFilling.filter((item) => item.uuid === id)[0];
+      return {
+        constructorItem,
+        index: burgerFilling.indexOf(constructorItem),
+      }
+    },
+    [burgerFilling],
+  )
+
+  const moveCard = useCallback(
+    (id: string | undefined, atIndex: number) => {
+      const { constructorItem, index } = findCard(id)
+      const newBurgerFilling = update(burgerFilling, {
+        $splice: [
+          [index, 1],
+          [atIndex, 0, constructorItem],
+        ],
+      });
+      dispatch(updateFillings(newBurgerFilling));
+    },
+    [findCard, burgerFilling, dispatch],
+  )
+
+  const [, drop] = useDrop(() => ({ accept: 'component' }))
+
   return (
-    <section className={`${styles.container} pt-25`}>
+    <section className={`${styles.container} ${isHover ? styles.onHover : ''} pt-25`} ref={dropTargetRef}>
       {burgerBun && <div className={styles.blockedElement}>
         <ConstructorElement
           type='top'
@@ -65,18 +85,17 @@ const BurgerConstructor = ({ showTotal, onOrderRequest }: Props) => {
         />
       </div>}
       <div className={`${styles.scrollContainer} pt-4 pb-4`}>
-        <ul className={styles.list}>
-          {burgerFilling.map((item, index) => (
-            <li key={index} className={`${styles.item} mb-4`}>
-              <DragIcon type="primary" />
-              <ConstructorElement
-                text={item.name}
-                thumbnail={item.image}
-                price={item.price}
-              />
-            </li>
+        <div className={styles.fillingsWrapper} ref={drop}>
+          {burgerFilling.map((item) => (
+            <BurgerConstructorItem
+              key={item.uuid}
+              id={item.uuid}
+              item={item}
+              moveCard={moveCard}
+              findCard={findCard}
+            />
           ))}
-        </ul>
+        </div>
       </div>
       {burgerBun && <div className={styles.blockedElement}>
         <ConstructorElement
@@ -87,15 +106,15 @@ const BurgerConstructor = ({ showTotal, onOrderRequest }: Props) => {
           price={burgerBun.price}
         />
       </div>}
-      <div className={`${styles.orderWrapper} mt-10`}>
+      {totalPrice > 0 && <div className={`${styles.orderWrapper} mt-10`}>
         <div className={styles.total}>
           <span className='text text_type_digits-medium'>{totalPrice}</span>
-          <CurrencyIcon type="primary" />
+          <CurrencyIcon type="primary"/>
         </div>
         <Button type="primary" size="large" onClick={onButtonClick}>
           Оформить заказ
         </Button>
-      </div>
+      </div>}
     </section>
   );
 };

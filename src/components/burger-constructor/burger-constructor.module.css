@@ -19,13 +19,6 @@
   list-style: none;
 }
 
-.item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 8px;
-}
-
 .orderWrapper {
   display: flex;
   justify-content: flex-end;
@@ -43,4 +36,8 @@
 .total svg {
   width: 36px;
   height: 36px;
+}
+
+.onHover {
+  background-color: rgba(255, 255, 255, .3);
 }

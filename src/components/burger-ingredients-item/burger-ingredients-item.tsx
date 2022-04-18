@@ -1,18 +1,32 @@
-import React, {useState} from 'react';
-import { CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components'
-import {Data} from "../../models/data";
+import React from 'react';
+import {Counter, CurrencyIcon} from '@ya.praktikum/react-developer-burger-ui-components'
+import {Data} from '../../models/data';
+import {useDispatch} from 'react-redux';
+import {addCurrentItem} from '../../services/reducers/modal';
+import {useDrag} from "react-dnd";
 import styles from './burger-ingredients-item.module.css';
 
 type Props = {
   ingredient: Data;
-  chooseCurrentItem: (ingredient: Data | null, modalType: string) => void;
 };
 
-const BurgerIngredientsItem = ({ ingredient, chooseCurrentItem }: Props) => {
-  const [count, setCount] = useState(0);
+const BurgerIngredientsItem = ({ ingredient }: Props) => {
+  const dispatch = useDispatch();
+
+  const [{ opacity }, dragRef] = useDrag({
+    type: 'ingredient',
+    item: {...ingredient},
+    collect: monitor => ({
+      opacity: monitor.isDragging() ? 0.5 : 1
+    })
+  });
+
+  const chooseCurrent = () => {
+    dispatch(addCurrentItem(ingredient));
+  };
 
   return (
-    <section className={styles.wrapper} onClick={() => chooseCurrentItem(ingredient, 'ingredient')}>
+    <section className={styles.wrapper} onClick={chooseCurrent} ref={dragRef} style={{opacity}}>
       <div className={`${styles.imageWrapper} pl-4 pr-4`}>
         <img className={styles.image} src={ingredient.image} alt={ingredient.name}/>
       </div>
@@ -21,10 +35,10 @@ const BurgerIngredientsItem = ({ ingredient, chooseCurrentItem }: Props) => {
         <CurrencyIcon type="primary"/>
       </div>
       <p className={`${styles.name} text text_type_main-default`}>{ingredient.name}</p>
-      {count > 0 &&
+      {ingredient.count > 0 ?
         (<div className={styles.counterWrapper}>
-          <Counter count={count} size="default"/>
-        </div>)}
+          <Counter count={ingredient.count} size="default"/>
+        </div>) : null}
     </section>
   );
 };

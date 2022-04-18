@@ -1,7 +1,9 @@
-import React from 'react';
+import React, {useCallback, useEffect} from 'react';
 import ReactDOM from "react-dom";
 import {CloseIcon} from '@ya.praktikum/react-developer-burger-ui-components'
 import ModalOverlay from "../modal-overlay/modal-overlay";
+import {selectModal} from "../../services/reducers/modal";
+import {useDispatch, useSelector} from "react-redux";
 import styles from './modal.module.css';
 
 type Props = {
@@ -13,6 +15,23 @@ type Props = {
 const modalRoot = document.getElementById("react-modals") as HTMLElement;
 
 const Modal = ({ children, onClose, header }: Props) => {
+  const { currentItem, orderNumber } = useSelector(selectModal)
+  const dispatch = useDispatch();
+
+  const onKeyDown = useCallback((e: any) => {
+    if (e.key === 'Escape') {
+      onClose();
+    }
+  }, [dispatch, currentItem, orderNumber]);
+
+  useEffect(() => {
+    document.addEventListener('keydown', onKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+    }
+  }, [onKeyDown])
+
   return ReactDOM.createPortal(
     <>
       <div className={`${styles.modal} pl-10 pt-10 pr-10 pb-15`}>
