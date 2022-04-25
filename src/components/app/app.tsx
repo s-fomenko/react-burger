@@ -9,8 +9,9 @@ import ConstructorPage from '../../pages/constructor-page/constructor-page';
 import Modal from '../modal/modal';
 import IngredientDetails from '../ingredient-details/ingredient-details';
 import OrderDetails from '../order-details/order-details';
+import LoginPage from '../../pages/login-page/login-page';
+import NotFound404 from '../../pages/NotFound404/NotFound404';
 import styles from './app.module.css';
-import NotFound404 from "../../pages/NotFound404/NotFound404";
 
 const App = () => {
   const { currentItem, orderNumber } = useSelector(selectModal);
@@ -37,6 +38,7 @@ const App = () => {
       <AppHeader/>
       <Routes>
         <Route path='/' element={<ConstructorPage />} />
+        <Route path='/login' element={<LoginPage />} />
         <Route path="*" element={<NotFound404 />} />
       </Routes>
       {currentItem && (
