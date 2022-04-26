@@ -10,6 +10,7 @@ import Modal from '../modal/modal';
 import IngredientDetails from '../ingredient-details/ingredient-details';
 import OrderDetails from '../order-details/order-details';
 import LoginPage from '../../pages/login-page/login-page';
+import RegisterPage from "../../pages/register-page/register-page";
 import NotFound404 from '../../pages/NotFound404/NotFound404';
 import styles from './app.module.css';
 
@@ -39,6 +40,7 @@ const App = () => {
       <Routes>
         <Route path='/' element={<ConstructorPage />} />
         <Route path='/login' element={<LoginPage />} />
+        <Route path='/register' element={<RegisterPage />} />
         <Route path="*" element={<NotFound404 />} />
       </Routes>
       {currentItem && (
