@@ -13,6 +13,7 @@ import LoginPage from '../../pages/login-page/login-page';
 import RegisterPage from "../../pages/register-page/register-page";
 import NotFound404 from '../../pages/NotFound404/NotFound404';
 import styles from './app.module.css';
+import ForgotPasswordPage from "../../pages/forgot-password-page/forgot-password-page";
 
 const App = () => {
   const { currentItem, orderNumber } = useSelector(selectModal);
@@ -41,6 +42,7 @@ const App = () => {
         <Route path='/' element={<ConstructorPage />} />
         <Route path='/login' element={<LoginPage />} />
         <Route path='/register' element={<RegisterPage />} />
+        <Route path='/forgot-password' element={<ForgotPasswordPage />} />
         <Route path="*" element={<NotFound404 />} />
       </Routes>
       {currentItem && (
