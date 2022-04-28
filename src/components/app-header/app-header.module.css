@@ -1,35 +1,50 @@
 .header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #1C1C21;
-    box-shadow:
-        0 24px 32px rgba(0, 0, 0, .04),
-        0 16px 24px rgba(0, 0, 0, .04),
-        0 4px 8px rgba(0, 0, 0, .04),
-        0 0 1px rgba(0, 0, 0, .04);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #1C1C21;
+  box-shadow:
+    0 24px 32px rgba(0, 0, 0, .04),
+    0 16px 24px rgba(0, 0, 0, .04),
+    0 4px 8px rgba(0, 0, 0, .04),
+    0 0 1px rgba(0, 0, 0, .04);
 }
 
 .nav {
-    width: 100%;
-    max-width: 1320px;
+  width: 100%;
+  max-width: 1320px;
 }
 
 .list {
-    display: grid;
-    grid-template-columns: max-content max-content 1fr max-content;
-    margin: 0;
-    padding: 0;
-    list-style: none;
+  display: grid;
+  grid-template-columns: max-content max-content 1fr max-content;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .item {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
+  color: #8585AD;
+  text-decoration: none;
+  transition: opacity ease-in .3s;
+}
+
+.itemActive {
+  display: flex;
+  align-items: center;
+  color: #fff;
+  text-decoration: none;
+  cursor: default;
+}
+
+.item:hover {
+  opacity: .5;
 }
 
 .logo {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
