@@ -11,7 +11,7 @@ const ForgotPasswordPage = () => {
     setEmailValue(e.target.value);
   };
 
-  const resetPassword = async (email: string) => {
+  const forgotPassword = async (email: string) => {
     const apiUrl = `${BASE_API_URL}password-reset`;
     try {
       const res = await fetch(apiUrl, {
@@ -34,7 +34,8 @@ const ForgotPasswordPage = () => {
 
   const onClick = (e: SyntheticEvent) => {
     e.preventDefault();
-    resetPassword(emailValue);
+    forgotPassword(emailValue)
+      .finally(() => setEmailValue(''))
   }
 
   return (
