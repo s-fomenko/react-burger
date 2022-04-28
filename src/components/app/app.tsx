@@ -14,6 +14,7 @@ import RegisterPage from "../../pages/register-page/register-page";
 import NotFound404 from '../../pages/NotFound404/NotFound404';
 import ForgotPasswordPage from "../../pages/forgot-password-page/forgot-password-page";
 import ResetPasswordPage from "../../pages/reset-password/reset-password-page";
+import ProfilePage from "../../pages/profile-page/profile-page";
 import styles from './app.module.css';
 
 const App = () => {
@@ -45,6 +46,7 @@ const App = () => {
         <Route path='/register' element={<RegisterPage />} />
         <Route path='/forgot-password' element={<ForgotPasswordPage />} />
         <Route path='/reset-password' element={<ResetPasswordPage />} />
+        <Route path='/profile' element={<ProfilePage />} />
         <Route path="*" element={<NotFound404 />} />
       </Routes>
       {currentItem && (
