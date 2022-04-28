@@ -28,7 +28,6 @@ const initialState: UserData = {
   user: {
     name: '',
     email: '',
-    password: '',
   },
   accessToken: '',
   refreshToken: '',

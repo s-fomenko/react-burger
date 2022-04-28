@@ -7,7 +7,6 @@ export type UserData = {
 type User = {
   name: string;
   email: string;
-  password: string;
 };
 
 
