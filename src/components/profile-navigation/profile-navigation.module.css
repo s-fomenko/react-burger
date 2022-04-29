@@ -1,0 +1,21 @@
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  padding: 17px 0;
+  color: #8585AD;
+}
+
+.link {
+  color: #8585AD;
+  text-decoration: none;
+}
+
+.activeLink {
+  color: #fff;
+  text-decoration: none;
+  cursor: default;
+}

@@ -1,8 +1,8 @@
 .main {
   display: grid;
-  grid-template-columns: max-content 1fr;
+  grid-template-columns: minmax(320px, max-content) 1fr;
   column-gap: 40px;
-  margin: 0 auto;
+  margin: 120px auto 0;
   max-width: 1320px;
   box-sizing: border-box;
 }
