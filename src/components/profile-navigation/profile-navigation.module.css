@@ -19,3 +19,7 @@
   text-decoration: none;
   cursor: default;
 }
+
+.text {
+  max-width: 320px;
+}

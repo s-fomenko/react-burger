@@ -23,15 +23,20 @@ const links: ProfileLinks[] = [
 ];
 
 const ProfileNavigation = (): JSX.Element => (
-  <ul className={styles.list}>
-    {links.map((route, index) => (
-      <li key={index} className={`${styles.item} text text_type_main-medium`}>
-        <NavLink to={route.path} className={({ isActive }) => isActive ? styles.activeLink : styles.link}>
-          {route.name}
-        </NavLink>
-      </li>
-    ))}
-  </ul>
+  <div>
+    <ul className={styles.list}>
+      {links.map((route, index) => (
+        <li key={index} className={`${styles.item} text text_type_main-medium`}>
+          <NavLink to={route.path} className={({ isActive }) => isActive ? styles.activeLink : styles.link}>
+            {route.name}
+          </NavLink>
+        </li>
+      ))}
+    </ul>
+    <p className={`${styles.text} text text_type_main-default text_color_inactive mt-20`}>
+      В этом разделе вы можете изменить свои персональные
+    </p>
+  </div>
 );
 
 export default ProfileNavigation;

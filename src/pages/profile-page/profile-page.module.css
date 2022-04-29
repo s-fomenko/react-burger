@@ -1,7 +1,7 @@
 .main {
   display: grid;
-  grid-template-columns: minmax(320px, max-content) 1fr;
-  column-gap: 40px;
+  grid-template-columns: minmax(320px, max-content) minmax(480px, max-content);
+  column-gap: 60px;
   margin: 120px auto 0;
   max-width: 1320px;
   box-sizing: border-box;
