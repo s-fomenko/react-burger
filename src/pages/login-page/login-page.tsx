@@ -1,15 +1,23 @@
-import React, { useState } from 'react';
+import React, {SyntheticEvent, useState} from 'react';
 import { Link } from 'react-router-dom';
 import { EmailInput, PasswordInput, Button } from '@ya.praktikum/react-developer-burger-ui-components'
+import { login } from '../../services/reducers/user';
+import { useDispatch } from 'react-redux';
 import styles from './login-page.module.css';
 
 const LoginPage = () => {
   const [emailValue, setEmailValue] = useState('');
   const [passwordValue, setPasswordValue] = useState('');
+  const dispatch = useDispatch();
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     e.target.name === 'email' ? setEmailValue(e.target.value) : setPasswordValue(e.target.value);
   };
+
+  const onClick = (e: SyntheticEvent) => {
+    e.preventDefault();
+    dispatch(login({email: emailValue, password: passwordValue}));
+  }
 
   return (
     <div className={styles.wrapper}>
@@ -18,7 +26,7 @@ const LoginPage = () => {
         <form className={styles.form}>
           <EmailInput onChange={onChange} value={emailValue} name={'email'} />
           <PasswordInput onChange={onChange} value={passwordValue} name={'password'} />
-          <Button type="primary" size="large">
+          <Button type="primary" size="large" onClick={onClick}>
             Войти
           </Button>
         </form>
