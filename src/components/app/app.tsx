@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Route, Routes } from 'react-router';
+import { Route, Switch } from "react-router";
 import { useDispatch, useSelector } from 'react-redux';
 import { getIngredients, resetCounts } from '../../services/reducers/burger-ingredients';
 import { removeCurrentItem, resetOrderNumber, selectModal } from '../../services/reducers/modal';
@@ -40,15 +40,29 @@ const App = () => {
   return (
     <div className={styles.app}>
       <AppHeader/>
-      <Routes>
-        <Route path='/' element={<ConstructorPage />} />
-        <Route path='/login' element={<LoginPage />} />
-        <Route path='/register' element={<RegisterPage />} />
-        <Route path='/forgot-password' element={<ForgotPasswordPage />} />
-        <Route path='/reset-password' element={<ResetPasswordPage />} />
-        <Route path='/profile/*' element={<ProfilePage />} />
-        <Route path="*" element={<NotFound404 />} />
-      </Routes>
+      <Switch>
+      <Route exact path='/'>
+        <ConstructorPage />
+      </Route>
+      <Route exact path='/login'>
+        <LoginPage />
+      </Route>
+      <Route exact path='/register'>
+        <RegisterPage />
+      </Route>
+        <Route exact path='/forgot-password'>
+          <ForgotPasswordPage />
+        </Route>
+        <Route exact path='/reset-password'>
+          <ResetPasswordPage />
+        </Route>
+        <Route exact path='/profile'>
+          <ProfilePage />
+        </Route>
+        <Route path="*">
+          <NotFound404 />
+        </Route>
+      </Switch>
       {currentItem && (
         <Modal onClose={onModalClose} header='Детали ингредиента'>
           <IngredientDetails ingredient={currentItem} />

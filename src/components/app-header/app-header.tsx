@@ -10,13 +10,13 @@ const AppHeader = () => {
       <nav className={styles.nav}>
         <ul className={styles.list}>
           <li className='p-5'>
-            <NavLink to='/' className={({isActive}) => isActive ? styles.itemActive : styles.item }>
+            <NavLink to='/' className={(isActive) => isActive ? styles.itemActive : styles.item }>
               <BurgerIcon type='primary' />
               <span className='pl-2 text text_type_main-default'>Конструктор</span>
             </NavLink>
           </li>
           <li className='p-5'>
-            <NavLink to='/orders' className={({isActive}) => isActive ? styles.itemActive : styles.item }>
+            <NavLink to='/orders' className={(isActive) => isActive ? styles.itemActive : styles.item }>
               <ListIcon type="primary" />
               <span className='pl-2 text text_type_main-default'>Лента заказов</span>
             </NavLink>
@@ -25,7 +25,7 @@ const AppHeader = () => {
             <Logo />
           </li>
           <li className='p-5'>
-            <NavLink to='/profile' className={({isActive}) => isActive ? styles.itemActive : styles.item }>
+            <NavLink to='/profile' className={(isActive) => isActive ? styles.itemActive : styles.item }>
               <ProfileIcon type="primary" />
               <span className='pl-2 text text_type_main-default'>Личный кабинет</span>
             </NavLink>
