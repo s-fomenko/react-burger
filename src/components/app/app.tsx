@@ -46,7 +46,7 @@ const App = () => {
         <Route path='/register' element={<RegisterPage />} />
         <Route path='/forgot-password' element={<ForgotPasswordPage />} />
         <Route path='/reset-password' element={<ResetPasswordPage />} />
-        <Route path='/profile' element={<ProfilePage />} />
+        <Route path='/profile/*' element={<ProfilePage />} />
         <Route path="*" element={<NotFound404 />} />
       </Routes>
       {currentItem && (

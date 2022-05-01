@@ -48,6 +48,52 @@ export const login = createAsyncThunk(
   }
 );
 
+export const updateToken = createAsyncThunk(
+  'updateToken/user',
+  async (token: string) => {
+    const apiUrl = `${BASE_API_URL}auth/token`;
+    try {
+      const res = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ token })
+      });
+      if (!res.ok) {
+        throw new Error('Ответ сети был не ok.');
+      }
+      const response = await res.json();
+      return response;
+    } catch (e) {
+      console.log(`Error: ${e}`)
+    }
+  }
+);
+
+export const logout = createAsyncThunk(
+  'logout/user',
+  async (token: string) => {
+    const apiUrl = `${BASE_API_URL}auth/logout`;
+    try {
+      const res = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ token })
+      });
+      if (!res.ok) {
+        throw new Error('Ответ сети был не ok.');
+      }
+      const response = await res.json();
+      return response;
+    } catch (e) {
+      console.log(`Error: ${e}`)
+    }
+  }
+);
+
 const initialState: UserData = {
   user: {
     name: '',
@@ -86,6 +132,10 @@ export const userSlice = createSlice({
     builder.addCase(login.fulfilled, (state, action) => {
       state.user.name = action.payload.user.name;
       state.user.email = action.payload.user.email;
+      state.accessToken = action.payload.accessToken;
+      state.refreshToken = action.payload.refreshToken;
+    })
+    builder.addCase(updateToken.fulfilled, (state, action) => {
       state.accessToken = action.payload.accessToken;
       state.refreshToken = action.payload.refreshToken;
     })
