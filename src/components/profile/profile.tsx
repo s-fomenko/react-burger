@@ -1,6 +1,8 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { EmailInput, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './profile.module.css';
+import {useDispatch, useSelector} from 'react-redux';
+import {getUserData, selectUser} from "../../services/reducers/user";
 
 type FormValue = {
   name: string;
@@ -14,6 +16,21 @@ const Profile = () => {
     email: '',
     password: '',
   });
+  const dispatch = useDispatch();
+  const { user } = useSelector(selectUser);
+
+  useEffect(() => {
+    dispatch(getUserData());
+  }, [])
+
+  useEffect(() => {
+    console.log('user', user)
+    setFormValue(value => ({
+      ...value,
+      name: user.name,
+      email: user.email
+    }))
+  }, [user])
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setFormValue(value => ({

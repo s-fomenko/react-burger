@@ -1,15 +1,14 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import {useDispatch, useSelector} from 'react-redux';
-import {logout, selectUser} from '../../services/reducers/user';
+import { useDispatch } from 'react-redux';
+import { logout } from '../../services/reducers/user';
 import styles from './profile-navigation.module.css';
 
 const ProfileNavigation = (): JSX.Element => {
   const dispatch = useDispatch();
-  const { refreshToken } = useSelector(selectUser);
 
   const onLogout = () => {
-    dispatch(logout(refreshToken))
+    dispatch(logout())
   }
 
   return (

@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { BASE_API_URL } from '../../constants/api';
 import {LoginData, RegisterData, UserData} from '../../models/user';
+import Cookies from 'js-cookie'
 
 export const register = createAsyncThunk(
   'register/user',
@@ -50,7 +51,7 @@ export const login = createAsyncThunk(
 
 export const updateToken = createAsyncThunk(
   'updateToken/user',
-  async (token: string) => {
+  async () => {
     const apiUrl = `${BASE_API_URL}auth/token`;
     try {
       const res = await fetch(apiUrl, {
@@ -58,7 +59,7 @@ export const updateToken = createAsyncThunk(
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ token })
+        body: JSON.stringify({ token: Cookies.get('refreshToken') })
       });
       if (!res.ok) {
         throw new Error('Ответ сети был не ok.');
@@ -73,7 +74,7 @@ export const updateToken = createAsyncThunk(
 
 export const logout = createAsyncThunk(
   'logout/user',
-  async (token: string) => {
+  async () => {
     const apiUrl = `${BASE_API_URL}auth/logout`;
     try {
       const res = await fetch(apiUrl, {
@@ -81,7 +82,29 @@ export const logout = createAsyncThunk(
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ token })
+        body: JSON.stringify({ token: Cookies.get('refreshToken') })
+      });
+      if (!res.ok) {
+        throw new Error('Ответ сети был не ok.');
+      }
+      const response = await res.json();
+      return response;
+    } catch (e) {
+      console.log(`Error: ${e}`)
+    }
+  }
+);
+
+export const getUserData = createAsyncThunk(
+  'getUserData/user',
+  async () => {
+    const apiUrl = `${BASE_API_URL}auth/user`;
+    try {
+      const res = await fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+          'authorization': Cookies.get('refreshToken')
+        },
       });
       if (!res.ok) {
         throw new Error('Ответ сети был не ok.');
@@ -128,16 +151,30 @@ export const userSlice = createSlice({
       state.user.email = action.payload.user.email;
       state.accessToken = action.payload.accessToken;
       state.refreshToken = action.payload.refreshToken;
+      Cookies.set('refreshToken', state.refreshToken);
     })
     builder.addCase(login.fulfilled, (state, action) => {
       state.user.name = action.payload.user.name;
       state.user.email = action.payload.user.email;
       state.accessToken = action.payload.accessToken;
       state.refreshToken = action.payload.refreshToken;
+      Cookies.set('refreshToken', state.refreshToken);
     })
     builder.addCase(updateToken.fulfilled, (state, action) => {
       state.accessToken = action.payload.accessToken;
       state.refreshToken = action.payload.refreshToken;
+      Cookies.set('refreshToken', state.refreshToken);
+    })
+    builder.addCase(logout.fulfilled, (state, action) => {
+      state.user.name = initialState.user.name;
+      state.user.email = initialState.user.email;
+      state.accessToken = initialState.accessToken;
+      state.refreshToken = initialState.refreshToken;
+      Cookies.remove('refreshToken');
+    })
+    builder.addCase(getUserData.fulfilled, (state, action) => {
+      state.user.name = action.payload.user.name;
+      state.user.email = action.payload.user.email;
     })
   },
 })
