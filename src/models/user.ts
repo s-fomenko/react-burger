@@ -20,5 +20,11 @@ export type LoginData = {
   password: string;
 }
 
+export type UpdateData = {
+  name: string;
+  email: string;
+  token: string;
+}
+
 
 

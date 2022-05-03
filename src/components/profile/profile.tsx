@@ -1,8 +1,10 @@
-import React, {useEffect, useState} from 'react';
-import { EmailInput, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
+import React, {SyntheticEvent, useEffect, useState} from 'react';
+import {Button, EmailInput, Input, PasswordInput} from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './profile.module.css';
 import {useDispatch, useSelector} from 'react-redux';
-import {getUserData, selectUser} from "../../services/reducers/user";
+import {getUserData, selectUser, updateUserData} from "../../services/reducers/user";
+import {Link} from "react-router-dom";
+import Cookies from "js-cookie";
 
 type FormValue = {
   name: string;
@@ -17,19 +19,22 @@ const Profile = () => {
     password: '',
   });
   const dispatch = useDispatch();
-  const { user } = useSelector(selectUser);
+  const { user, accessToken, refreshToken } = useSelector(selectUser);
 
   useEffect(() => {
-    dispatch(getUserData());
+    if (Cookies.get('refreshToken')) {
+      dispatch(getUserData(accessToken));
+    }
   }, [])
 
   useEffect(() => {
-    console.log('user', user)
-    setFormValue(value => ({
-      ...value,
-      name: user.name,
-      email: user.email
-    }))
+    if (user) {
+      setFormValue(value => ({
+        ...value,
+        name: user.name,
+        email: user.email
+      }))
+    }
   }, [user])
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -39,11 +44,31 @@ const Profile = () => {
     }))
   };
 
+  const onConfirm = (e: SyntheticEvent): void => {
+    e.preventDefault();
+    dispatch(updateUserData({name: formValue.name, email: formValue.email, token: accessToken}))
+  };
+
+  const onCancel = (e: SyntheticEvent): void => {
+    e.preventDefault();
+    setFormValue(value => ({
+      ...value,
+      name: user.name,
+      email: user.email
+    }))
+  };
+
   return (
     <form className={styles.form}>
       <Input onChange={onChange} value={formValue.name} name={'name'} placeholder='Имя' />
       <EmailInput onChange={onChange} value={formValue.email} name={'email'} />
       <PasswordInput onChange={onChange} value={formValue.password} name={'password'} />
+      <Button type="primary" size="large" onClick={onConfirm}>
+        Сохранить
+      </Button>
+      <Button type="secondary" size="medium" onClick={onCancel}>
+        Отмена
+      </Button>
     </form>
   );
 };

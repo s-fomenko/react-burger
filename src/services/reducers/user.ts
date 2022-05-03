@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { BASE_API_URL } from '../../constants/api';
-import {LoginData, RegisterData, UserData} from '../../models/user';
+import {LoginData, RegisterData, UpdateData, UserData} from '../../models/user';
 import Cookies from 'js-cookie'
 
 export const register = createAsyncThunk(
@@ -97,14 +97,39 @@ export const logout = createAsyncThunk(
 
 export const getUserData = createAsyncThunk(
   'getUserData/user',
-  async () => {
+  async (accessToken: string) => {
     const apiUrl = `${BASE_API_URL}auth/user`;
     try {
       const res = await fetch(apiUrl, {
         method: 'GET',
         headers: {
-          'authorization': Cookies.get('refreshToken')
+          'authorization': accessToken
         },
+      });
+      if (!res.ok) {
+        throw new Error('Ответ сети был не ok.');
+      }
+      const response = await res.json();
+      return response;
+    } catch (e) {
+      console.log(`Error: ${e}`)
+    }
+  }
+);
+
+export const updateUserData = createAsyncThunk(
+  'updateUserData/user',
+  async (updateData: UpdateData) => {
+    const apiUrl = `${BASE_API_URL}auth/user`;
+    const { token, ...rest } = updateData;
+    try {
+      const res = await fetch(apiUrl, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'authorization': token
+        },
+        body: JSON.stringify(rest)
       });
       if (!res.ok) {
         throw new Error('Ответ сети был не ok.');
@@ -173,6 +198,10 @@ export const userSlice = createSlice({
       Cookies.remove('refreshToken');
     })
     builder.addCase(getUserData.fulfilled, (state, action) => {
+      state.user.name = action.payload.user.name;
+      state.user.email = action.payload.user.email;
+    })
+    builder.addCase(updateUserData.fulfilled, (state, action) => {
       state.user.name = action.payload.user.name;
       state.user.email = action.payload.user.email;
     })
