@@ -22,12 +22,11 @@ const Profile = () => {
   const { user, accessToken, refreshToken } = useSelector(selectUser);
 
   useEffect(() => {
-    console.log('refreshToken', Cookies.get('refreshToken'))
     if (Cookies.get('refreshToken')) {
       dispatch(updateToken());
       dispatch(getUserData(accessToken));
     }
-  }, [])
+  }, [accessToken])
 
   useEffect(() => {
     if (user) {

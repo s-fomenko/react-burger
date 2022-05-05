@@ -16,6 +16,8 @@ import ForgotPasswordPage from "../../pages/forgot-password-page/forgot-password
 import ResetPasswordPage from "../../pages/reset-password/reset-password-page";
 import ProfilePage from "../../pages/profile-page/profile-page";
 import styles from './app.module.css';
+import ProtectedRoute from "../protected-route/protected-route";
+import Cookies from "js-cookie";
 
 const App = () => {
   const { currentItem, orderNumber } = useSelector(selectModal);
@@ -56,9 +58,12 @@ const App = () => {
         <Route exact path='/reset-password'>
           <ResetPasswordPage />
         </Route>
-        <Route exact path='/profile'>
+        <ProtectedRoute isLoggedIn={Cookies.get('refreshToken')} path='/profile' redirect='/login'>
           <ProfilePage />
-        </Route>
+        </ProtectedRoute>
+        {/*<Route exact path='/profile'>*/}
+        {/*  <ProfilePage />*/}
+        {/*</Route>*/}
         <Route path="*">
           <NotFound404 />
         </Route>
