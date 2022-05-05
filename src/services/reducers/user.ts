@@ -154,22 +154,7 @@ const initialState: UserData = {
 export const userSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: {
-    // increaseCount: (state, action) => {
-    //   state.items.map(item => item._id === action.payload._id ? {...item, count: item.count += 1} : item);
-    // },
-    // decreaseCount: (state, action) => {
-    //   state.items.map(item => item._id === action.payload._id ? {...item, count: item.count -= 1} : item);
-    // },
-    // updateBunCount: (state, action) => {
-    //   state.items.map(item => item._id === action.payload._id ?
-    //     {...item, count: item.count === 0 ? item.count += 2 : item.count} :
-    //     {...item, count: item.count === 2 ? item.count -= 2 : item.count});
-    // },
-    // resetCounts: state => {
-    //   state.items.map(item => ({...item, count: item.count = 0}))
-    // }
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder.addCase(register.fulfilled, (state, action) => {
       state.user.name = action.payload.user.name;

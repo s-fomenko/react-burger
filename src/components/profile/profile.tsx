@@ -2,7 +2,7 @@ import React, {SyntheticEvent, useEffect, useState} from 'react';
 import {Button, EmailInput, Input, PasswordInput} from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './profile.module.css';
 import {useDispatch, useSelector} from 'react-redux';
-import {getUserData, selectUser, updateUserData} from "../../services/reducers/user";
+import {getUserData, selectUser, updateToken, updateUserData} from "../../services/reducers/user";
 import {Link} from "react-router-dom";
 import Cookies from "js-cookie";
 
@@ -22,7 +22,9 @@ const Profile = () => {
   const { user, accessToken, refreshToken } = useSelector(selectUser);
 
   useEffect(() => {
+    console.log('refreshToken', Cookies.get('refreshToken'))
     if (Cookies.get('refreshToken')) {
+      dispatch(updateToken());
       dispatch(getUserData(accessToken));
     }
   }, [])
@@ -46,6 +48,7 @@ const Profile = () => {
 
   const onConfirm = (e: SyntheticEvent): void => {
     e.preventDefault();
+    dispatch(updateToken());
     dispatch(updateUserData({name: formValue.name, email: formValue.email, token: accessToken}))
   };
 
